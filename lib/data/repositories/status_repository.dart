@@ -11,18 +11,12 @@ class StatusRepository {
       : _safService = safService ?? SafService();
 
   /// Descubre las rutas directas accesibles en el sistema de archivos.
-  /// Resuelve la ruta canónica de cada directorio para evitar duplicados en
-  /// filesystems case-insensitive (común en /storage/emulated/0/ de Android).
   Future<List<String>> _discoverDirectories() async {
-    final seen = <String>{};
     final dirs = <String>[];
     for (final path in AppConstants.whatsappStatusPaths) {
       final dir = Directory(path);
       if (await dir.exists()) {
-        final canonical = await dir.resolveSymbolicLinks();
-        if (seen.add(canonical)) {
-          dirs.add(path);
-        }
+        dirs.add(path);
       }
     }
     return dirs;
@@ -49,6 +43,8 @@ class StatusRepository {
 
   Future<List<StatusFile>> _loadFromDirectories(List<String> dirs) async {
     final files = <StatusFile>[];
+    final seenNames = <String>{}; // deduplicación por nombre de archivo
+
     for (final dir in dirs) {
       final dirEntity = Directory(dir);
       if (!await dirEntity.exists()) continue;
@@ -57,9 +53,11 @@ class StatusRepository {
         if (entity is! File) continue;
         final file = entity;
         final name = file.uri.pathSegments.last;
-        final ext = name.contains('.')
-            ? '.${name.split('.').last.toLowerCase()}'
-            : '';
+        // Si ya procesamos un archivo con este nombre (otra ruta al mismo dir), saltar
+        if (!seenNames.add(name.toLowerCase())) continue;
+
+        final ext =
+            name.contains('.') ? '.${name.split('.').last.toLowerCase()}' : '';
 
         files.add(StatusFile(
           filePath: file.path,
