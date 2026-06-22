@@ -1,0 +1,158 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:statuses/data/models/status_file.dart';
+import 'package:statuses/ui/theme/app_theme.dart';
+import 'package:statuses/utils/date_formatter.dart';
+import 'package:statuses/utils/file_utils.dart';
+
+class StatusThumbnailCard extends StatelessWidget {
+  final StatusFile status;
+  final VoidCallback? onTap;
+
+  const StatusThumbnailCard({
+    super.key,
+    required this.status,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+            child: Image.file(
+              File(status.filePath),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+            ),
+          ),
+          if (status.mediaType != MediaType.image)
+            Positioned(
+              top: 4,
+              right: 4,
+              child: _buildBadge(context),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      color: isDark ? AppColors.surfaceDark : Colors.grey[200],
+      child: Icon(
+        status.mediaType == MediaType.video
+            ? Icons.videocam_rounded
+            : status.mediaType == MediaType.audio
+                ? Icons.audiotrack_rounded
+                : Icons.image_rounded,
+        color: AppColors.secondaryText,
+        size: 32,
+      ),
+    );
+  }
+
+  Widget _buildBadge(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            status.mediaType == MediaType.video
+                ? Icons.play_arrow_rounded
+                : Icons.music_note_rounded,
+            color: Colors.white,
+            size: 14,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            status.mediaType == MediaType.video ? 'VIDEO' : 'AUDIO',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StatusListItem extends StatelessWidget {
+  final StatusFile status;
+  final VoidCallback? onTap;
+
+  const StatusListItem({
+    super.key,
+    required this.status,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+        child: SizedBox(
+          width: 48,
+          height: 48,
+          child: Image.file(
+            File(status.filePath),
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              color: Colors.grey[200],
+              child: Icon(
+                status.mediaType == MediaType.video
+                    ? Icons.videocam_rounded
+                    : status.mediaType == MediaType.audio
+                        ? Icons.audiotrack_rounded
+                        : Icons.image_rounded,
+                color: AppColors.secondaryText,
+              ),
+            ),
+          ),
+        ),
+      ),
+      title: Text(
+        status.fileNameWithoutExtension,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.w500),
+      ),
+      subtitle: Row(
+        children: [
+          Text(DateFormatter.formatRelative(status.lastModified)),
+          const SizedBox(width: 8),
+          Text(
+            FileUtils.formatFileSize(status.fileSize),
+            style: TextStyle(color: AppColors.secondaryText),
+          ),
+        ],
+      ),
+      trailing: _buildTrailingIcon(context),
+      onTap: onTap,
+    );
+  }
+
+  Widget? _buildTrailingIcon(BuildContext context) {
+    switch (status.mediaType) {
+      case MediaType.video:
+        return const Icon(Icons.play_circle_outline, color: AppColors.primaryDark);
+      case MediaType.audio:
+        return const Icon(Icons.music_note_outlined, color: AppColors.primaryDark);
+      default:
+        return null;
+    }
+  }
+}
