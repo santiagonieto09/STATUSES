@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:statuses/data/models/status_file.dart';
+import 'package:statuses/data/services/video_thumbnail_service.dart';
 import 'package:statuses/ui/theme/app_theme.dart';
 import 'package:statuses/utils/date_formatter.dart';
 import 'package:statuses/utils/file_utils.dart';
@@ -24,11 +25,7 @@ class StatusThumbnailCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(AppShapes.smallRadius),
-            child: Image.file(
-              File(status.filePath),
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _buildPlaceholder(context),
-            ),
+            child: _buildImage(context),
           ),
           if (status.mediaType != MediaType.image)
             Positioned(
@@ -39,6 +36,49 @@ class StatusThumbnailCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    switch (status.mediaType) {
+      case MediaType.video:
+        return FutureBuilder<String?>(
+          future: VideoThumbnailService.instance.getThumbnail(status.filePath),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: Colors.black87,
+                child: const Center(
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData && snapshot.data != null) {
+              return Image.file(
+                File(snapshot.data!),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+              );
+            }
+            return _buildPlaceholder(context);
+          },
+        );
+      case MediaType.audio:
+      case MediaType.unknown:
+        return _buildPlaceholder(context);
+      case MediaType.image:
+        return Image.file(
+          File(status.filePath),
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+        );
+    }
   }
 
   Widget _buildPlaceholder(BuildContext context) {
@@ -107,21 +147,7 @@ class StatusListItem extends StatelessWidget {
         child: SizedBox(
           width: 48,
           height: 48,
-          child: Image.file(
-            File(status.filePath),
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              color: Colors.grey[200],
-              child: Icon(
-                status.mediaType == MediaType.video
-                    ? Icons.videocam_rounded
-                    : status.mediaType == MediaType.audio
-                        ? Icons.audiotrack_rounded
-                        : Icons.image_rounded,
-                color: AppColors.secondaryText,
-              ),
-            ),
-          ),
+          child: _buildLeadingImage(context),
         ),
       ),
       title: Text(
@@ -145,12 +171,69 @@ class StatusListItem extends StatelessWidget {
     );
   }
 
+  Widget _buildLeadingImage(BuildContext context) {
+    final errorWidget = Container(
+      color: Colors.grey[200],
+      child: Icon(
+        status.mediaType == MediaType.video
+            ? Icons.videocam_rounded
+            : status.mediaType == MediaType.audio
+                ? Icons.audiotrack_rounded
+                : Icons.image_rounded,
+        color: AppColors.secondaryText,
+      ),
+    );
+
+    switch (status.mediaType) {
+      case MediaType.video:
+        return FutureBuilder<String?>(
+          future: VideoThumbnailService.instance.getThumbnail(status.filePath),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: Colors.black87,
+                child: const Center(
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData && snapshot.data != null) {
+              return Image.file(
+                File(snapshot.data!),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => errorWidget,
+              );
+            }
+            return errorWidget;
+          },
+        );
+      case MediaType.audio:
+      case MediaType.unknown:
+        return errorWidget;
+      case MediaType.image:
+        return Image.file(
+          File(status.filePath),
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => errorWidget,
+        );
+    }
+  }
+
   Widget? _buildTrailingIcon(BuildContext context) {
     switch (status.mediaType) {
       case MediaType.video:
-        return const Icon(Icons.play_circle_outline, color: AppColors.primaryDark);
+        return const Icon(Icons.play_circle_outline,
+            color: AppColors.primaryDark);
       case MediaType.audio:
-        return const Icon(Icons.music_note_outlined, color: AppColors.primaryDark);
+        return const Icon(Icons.music_note_outlined,
+            color: AppColors.primaryDark);
       default:
         return null;
     }
