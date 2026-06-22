@@ -136,7 +136,7 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
                       : 'No saved statuses',
                   subtitle: downloadNotifier.hasSaved
                       ? 'No hay archivos guardados de este tipo.'
-                      : 'Los estados que descargues aparecerán aquí.\nSe guardan en Pictures/Statuses.',
+                      : 'Los estados que descargues aparecerán aquí.',
                   icon: downloadNotifier.hasSaved
                       ? Icons.filter_list_off_rounded
                       : Icons.download_rounded,
