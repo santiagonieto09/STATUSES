@@ -61,8 +61,9 @@ class StatusRepository {
 
         final mediaType = FileUtils.detectMediaType(ext);
         // Solo procesar imagenes y videos
-        if (mediaType != MediaType.image && mediaType != MediaType.video)
+        if (mediaType != MediaType.image && mediaType != MediaType.video) {
           continue;
+        }
 
         files.add(StatusFile(
           filePath: file.path,
