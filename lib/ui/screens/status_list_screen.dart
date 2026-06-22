@@ -37,7 +37,10 @@ class StatusListScreen extends StatelessWidget {
                 status: status,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => StatusDetailScreen(status: status),
+                    builder: (_) => StatusDetailScreen(
+                      statuses: notifier.statuses,
+                      initialIndex: index,
+                    ),
                   ),
                 ),
               );

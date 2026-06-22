@@ -9,54 +9,95 @@ import 'package:statuses/utils/date_formatter.dart';
 import 'package:statuses/utils/file_utils.dart';
 
 class StatusDetailScreen extends StatefulWidget {
-  final StatusFile status;
+  final List<StatusFile> statuses;
+  final int initialIndex;
 
-  const StatusDetailScreen({super.key, required this.status});
+  const StatusDetailScreen({
+    super.key,
+    required this.statuses,
+    required this.initialIndex,
+  });
 
   @override
   State<StatusDetailScreen> createState() => _StatusDetailScreenState();
 }
 
 class _StatusDetailScreenState extends State<StatusDetailScreen> {
+  late final PageController _pageController;
+  late int _currentIndex;
   VideoPlayerController? _videoController;
   bool _isVideoInitialized = false;
+
+  StatusFile get _current => widget.statuses[_currentIndex];
 
   @override
   void initState() {
     super.initState();
-    if (widget.status.mediaType == MediaType.video) {
-      _initVideo();
-    }
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+    _tryInitVideo(_currentIndex);
   }
 
-  Future<void> _initVideo() async {
-    final file = File(widget.status.filePath);
+  Future<void> _tryInitVideo(int index) async {
+    final status = widget.statuses[index];
+    if (status.mediaType != MediaType.video) return;
+    final file = File(status.filePath);
     if (!await file.exists()) return;
-
-    _videoController = VideoPlayerController.file(file);
-    await _videoController!.initialize();
-    if (mounted) {
-      setState(() => _isVideoInitialized = true);
-      _videoController!.play();
+    final controller = VideoPlayerController.file(file);
+    await controller.initialize();
+    if (!mounted) {
+      controller.dispose();
+      return;
     }
+    final old = _videoController;
+    setState(() {
+      _videoController = controller;
+      _isVideoInitialized = true;
+    });
+    controller.play();
+    old?.dispose();
+  }
+
+  void _onPageChanged(int index) {
+    _videoController?.pause();
+    final old = _videoController;
+    setState(() {
+      _currentIndex = index;
+      _videoController = null;
+      _isVideoInitialized = false;
+    });
+    old?.dispose();
+    _tryInitVideo(index);
   }
 
   @override
   void dispose() {
     _videoController?.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final showSubtitle = widget.statuses.length > 1;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black87,
         foregroundColor: Colors.white,
-        title: Text(
-          widget.status.fileNameWithoutExtension,
-          style: const TextStyle(fontSize: 14),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _current.fileNameWithoutExtension,
+              style: const TextStyle(fontSize: 14),
+            ),
+            if (showSubtitle)
+              Text(
+                '${_currentIndex + 1} / ${widget.statuses.length}',
+                style: const TextStyle(fontSize: 11, color: Colors.white54),
+              ),
+          ],
         ),
         actions: [
           PopupMenuButton<String>(
@@ -72,22 +113,33 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
       ),
       body: Column(
         children: [
-          Expanded(child: _buildMediaViewer(context)),
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              itemCount: widget.statuses.length,
+              itemBuilder: (context, index) => _buildPage(
+                context,
+                widget.statuses[index],
+                index == _currentIndex,
+              ),
+            ),
+          ),
           _buildBottomBar(context),
         ],
       ),
     );
   }
 
-  Widget _buildMediaViewer(BuildContext context) {
-    final file = File(widget.status.filePath);
+  Widget _buildPage(BuildContext context, StatusFile status, bool isActive) {
+    final file = File(status.filePath);
     if (!file.existsSync()) {
       return const Center(
         child: Text('File not found', style: TextStyle(color: Colors.white)),
       );
     }
 
-    switch (widget.status.mediaType) {
+    switch (status.mediaType) {
       case MediaType.image:
         return InteractiveViewer(
           minScale: 0.5,
@@ -104,7 +156,7 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
           ),
         );
       case MediaType.video:
-        if (!_isVideoInitialized) {
+        if (!isActive || !_isVideoInitialized || _videoController == null) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +224,7 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                widget.status.fileNameWithoutExtension,
+                status.fileNameWithoutExtension,
                 style: const TextStyle(color: Colors.white70),
               ),
             ],
@@ -242,7 +294,7 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
       case 'download':
         {
           final notifier = context.read<DownloadNotifier>();
-          await notifier.downloadStatus(widget.status);
+          await notifier.downloadStatus(_current);
           if (context.mounted) {
             final success = notifier.error == null;
             final msg = success
@@ -262,7 +314,7 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
       case 'share':
         {
           final notifier = context.read<DownloadNotifier>();
-          await notifier.shareStatus(widget.status);
+          await notifier.shareStatus(_current);
           break;
         }
       case 'info':
@@ -275,15 +327,14 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name: ${widget.status.fileName}'),
+                  Text('Name: ${_current.fileName}'),
+                  const SizedBox(height: 4),
+                  Text('Size: ${FileUtils.formatFileSize(_current.fileSize)}'),
+                  const SizedBox(height: 4),
+                  Text('Type: ${_current.mediaType.name}'),
                   const SizedBox(height: 4),
                   Text(
-                      'Size: ${FileUtils.formatFileSize(widget.status.fileSize)}'),
-                  const SizedBox(height: 4),
-                  Text('Type: ${widget.status.mediaType.name}'),
-                  const SizedBox(height: 4),
-                  Text(
-                      'Date: ${DateFormatter.formatDateTime(widget.status.lastModified)}'),
+                      'Date: ${DateFormatter.formatDateTime(_current.lastModified)}'),
                 ],
               ),
               actions: [

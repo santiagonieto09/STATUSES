@@ -39,8 +39,7 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
         if (!downloadNotifier.hasSaved) {
           return const EmptyState(
             title: 'No saved statuses',
-            subtitle:
-                'Los estados que descargues aparecerán aquí.',
+            subtitle: 'Los estados que descargues aparecerán aquí.',
             icon: Icons.download_rounded,
           );
         }
@@ -65,7 +64,10 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
                         status: status,
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => StatusDetailScreen(status: status),
+                            builder: (_) => StatusDetailScreen(
+                              statuses: downloadNotifier.savedStatuses,
+                              initialIndex: index,
+                            ),
                           ),
                         ),
                       );
@@ -105,6 +107,8 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
 
   int _crossAxisCount(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return width > 600 ? AppConstants.gridCrossAxisCountLandscape : AppConstants.gridCrossAxisCount;
+    return width > 600
+        ? AppConstants.gridCrossAxisCountLandscape
+        : AppConstants.gridCrossAxisCount;
   }
 }
