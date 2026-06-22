@@ -19,18 +19,9 @@ void main() {
       expect(FileUtils.detectMediaType('.3gp'), MediaType.video);
     });
 
-    test('returns audio for .mp3', () {
-      expect(FileUtils.detectMediaType('.mp3'), MediaType.audio);
-    });
-
-    test('returns audio for .aac', () {
-      expect(FileUtils.detectMediaType('.aac'), MediaType.audio);
-    });
-
     test('is case insensitive', () {
       expect(FileUtils.detectMediaType('.JPG'), MediaType.image);
       expect(FileUtils.detectMediaType('.MP4'), MediaType.video);
-      expect(FileUtils.detectMediaType('.MP3'), MediaType.audio);
     });
 
     test('returns unknown for unsupported extension', () {

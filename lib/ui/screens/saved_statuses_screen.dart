@@ -8,6 +8,7 @@ import 'package:statuses/ui/screens/status_detail_screen.dart';
 import 'package:statuses/ui/widgets/empty_state.dart';
 import 'package:statuses/ui/widgets/shimmer_loading.dart';
 import 'package:statuses/ui/widgets/status_thumbnail_card.dart';
+import 'package:statuses/utils/file_utils.dart';
 
 class SavedStatusesScreen extends StatefulWidget {
   const SavedStatusesScreen({super.key});
