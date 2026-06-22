@@ -22,23 +22,18 @@ class PermissionService {
     if (Platform.isAndroid) {
       final sdk = await _androidSdkVersion();
 
-      if (sdk >= 33) {
-        final image = await ph.Permission.photos.request();
-        final video = await ph.Permission.videos.request();
-        final audio = await ph.Permission.audio.request();
-
-        if (image.isGranted && video.isGranted && audio.isGranted) {
-          return PermissionState.granted;
-        }
-        if (image.isPermanentlyDenied ||
-            video.isPermanentlyDenied ||
-            audio.isPermanentlyDenied) {
+      if (sdk >= 30) {
+        // Android 11+ (SDK 30+): MANAGE_EXTERNAL_STORAGE es necesario para
+        // acceder directamente a Android/media/com.whatsapp/ via dart:io File.
+        // En SDK >= 33 tambien solicitamos los permisos de media granulares
+        // como fallback para acceso via MediaStore.
+        final manage =
+            await ph.Permission.manageExternalStorage.request();
+        if (manage.isGranted) return PermissionState.granted;
+        if (manage.isPermanentlyDenied) {
           return PermissionState.permanentlyDenied;
         }
         return PermissionState.denied;
-      } else if (sdk >= 30) {
-        final status = await ph.Permission.manageExternalStorage.request();
-        return _checkPermissionState(status);
       } else {
         final status = await ph.Permission.storage.request();
         return _checkPermissionState(status);
@@ -51,20 +46,7 @@ class PermissionService {
     if (Platform.isAndroid) {
       final sdk = await _androidSdkVersion();
 
-      if (sdk >= 33) {
-        final image = await ph.Permission.photos.status;
-        final video = await ph.Permission.videos.status;
-        final audio = await ph.Permission.audio.status;
-        if (image.isGranted && video.isGranted && audio.isGranted) {
-          return PermissionState.granted;
-        }
-        if (image.isPermanentlyDenied ||
-            video.isPermanentlyDenied ||
-            audio.isPermanentlyDenied) {
-          return PermissionState.permanentlyDenied;
-        }
-        return PermissionState.denied;
-      } else if (sdk >= 30) {
+      if (sdk >= 30) {
         final status = await ph.Permission.manageExternalStorage.status;
         return _checkPermissionState(status);
       } else {
