@@ -19,9 +19,9 @@ void main() {
       ),
     );
 
-    expect(find.text('No statuses found'), findsOneWidget);
+    expect(find.text('No stories found'), findsOneWidget);
     expect(
-      find.text('Open WhatsApp, view some statuses, then come back here.'),
+      find.text('Open WhatsApp, view some stories, then come back here.'),
       findsOneWidget,
     );
   });
