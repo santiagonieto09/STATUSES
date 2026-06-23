@@ -106,6 +106,9 @@ class _Translations$detail$es extends Translations$detail$en {
 	@override String get unsupported_file_type => 'Tipo de archivo no soportado';
 	@override String get saved_successfully => 'Archivo guardado correctamente';
 	@override String get video_badge => 'VIDEO';
+	@override String get repost => 'Volver a publicar';
+	@override String get repost_whatsapp => 'Publicar en WhatsApp';
+	@override String get saved_badge => 'Guardado';
 }
 
 // Path: saved
@@ -188,6 +191,17 @@ class _Translations$settings$es extends Translations$settings$en {
 	@override String get dark => 'Oscuro';
 	@override String get toggle_view => 'Cambiar vista';
 	@override String get toggle_theme => 'Cambiar tema';
+	@override String get notifications => 'Servicio de notificaciones';
+	@override String get notifications_description => 'Monitorear periódicamente los estados y notificar cuando existan nuevos contenidos.';
+	@override String get notification_active => 'Activo';
+	@override String get notification_inactive => 'Inactivo';
+	@override String get notification_permission_title => 'Permiso de notificaciones';
+	@override String get notification_permission_body => 'Las notificaciones te avisarán cuando haya nuevos estados disponibles sin necesidad de abrir la aplicación.';
+	@override String get auto_save => 'Guardado automático';
+	@override String get auto_save_description => 'Guardar automáticamente los estados detectados en la carpeta de la aplicación.';
+	@override String get auto_save_active => 'Activado';
+	@override String get auto_save_inactive => 'Desactivado';
+	@override String auto_save_storage({required Object usage}) => 'Espacio utilizado: ${usage}';
 	@override String get help => 'Ayuda';
 	@override String get help_center => 'Centro de ayuda';
 	@override String get about => 'Acerca de';
@@ -251,6 +265,9 @@ extension on TranslationsEs {
 			'detail.unsupported_file_type' => 'Tipo de archivo no soportado',
 			'detail.saved_successfully' => 'Archivo guardado correctamente',
 			'detail.video_badge' => 'VIDEO',
+			'detail.repost' => 'Volver a publicar',
+			'detail.repost_whatsapp' => 'Publicar en WhatsApp',
+			'detail.saved_badge' => 'Guardado',
 			'saved.empty_title' => 'Sin historias guardadas',
 			'saved.empty_subtitle' => 'Las historias que descargues aparecerán aquí.',
 			'saved.empty_filtered_title' => 'Sin resultados',
@@ -288,6 +305,17 @@ extension on TranslationsEs {
 			'settings.dark' => 'Oscuro',
 			'settings.toggle_view' => 'Cambiar vista',
 			'settings.toggle_theme' => 'Cambiar tema',
+			'settings.notifications' => 'Servicio de notificaciones',
+			'settings.notifications_description' => 'Monitorear periódicamente los estados y notificar cuando existan nuevos contenidos.',
+			'settings.notification_active' => 'Activo',
+			'settings.notification_inactive' => 'Inactivo',
+			'settings.notification_permission_title' => 'Permiso de notificaciones',
+			'settings.notification_permission_body' => 'Las notificaciones te avisarán cuando haya nuevos estados disponibles sin necesidad de abrir la aplicación.',
+			'settings.auto_save' => 'Guardado automático',
+			'settings.auto_save_description' => 'Guardar automáticamente los estados detectados en la carpeta de la aplicación.',
+			'settings.auto_save_active' => 'Activado',
+			'settings.auto_save_inactive' => 'Desactivado',
+			'settings.auto_save_storage' => ({required Object usage}) => 'Espacio utilizado: ${usage}',
 			'settings.help' => 'Ayuda',
 			'settings.help_center' => 'Centro de ayuda',
 			'settings.about' => 'Acerca de',

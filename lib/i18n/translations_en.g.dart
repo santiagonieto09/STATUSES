@@ -149,6 +149,15 @@ class Translations$detail$en {
 
 	/// en: 'VIDEO'
 	String get video_badge => 'VIDEO';
+
+	/// en: 'Repost'
+	String get repost => 'Repost';
+
+	/// en: 'Post to WhatsApp'
+	String get repost_whatsapp => 'Post to WhatsApp';
+
+	/// en: 'Saved'
+	String get saved_badge => 'Saved';
 }
 
 // Path: saved
@@ -306,6 +315,39 @@ class Translations$settings$en {
 	/// en: 'Toggle theme'
 	String get toggle_theme => 'Toggle theme';
 
+	/// en: 'Notification Service'
+	String get notifications => 'Notification Service';
+
+	/// en: 'Periodically monitor statuses and notify you when new content is available.'
+	String get notifications_description => 'Periodically monitor statuses and notify you when new content is available.';
+
+	/// en: 'Active'
+	String get notification_active => 'Active';
+
+	/// en: 'Inactive'
+	String get notification_inactive => 'Inactive';
+
+	/// en: 'Notification Permission'
+	String get notification_permission_title => 'Notification Permission';
+
+	/// en: 'Notifications will alert you when new statuses are available without opening the app.'
+	String get notification_permission_body => 'Notifications will alert you when new statuses are available without opening the app.';
+
+	/// en: 'Auto-save'
+	String get auto_save => 'Auto-save';
+
+	/// en: 'Automatically save detected statuses to the app's folder.'
+	String get auto_save_description => 'Automatically save detected statuses to the app\'s folder.';
+
+	/// en: 'Enabled'
+	String get auto_save_active => 'Enabled';
+
+	/// en: 'Disabled'
+	String get auto_save_inactive => 'Disabled';
+
+	/// en: 'Storage used: $usage'
+	String auto_save_storage({required Object usage}) => 'Storage used: ${usage}';
+
 	/// en: 'Help'
 	String get help => 'Help';
 
@@ -414,6 +456,9 @@ extension on Translations {
 			'detail.unsupported_file_type' => 'Unsupported file type',
 			'detail.saved_successfully' => 'File saved successfully',
 			'detail.video_badge' => 'VIDEO',
+			'detail.repost' => 'Repost',
+			'detail.repost_whatsapp' => 'Post to WhatsApp',
+			'detail.saved_badge' => 'Saved',
 			'saved.empty_title' => 'No saved stories',
 			'saved.empty_subtitle' => 'Stories you download will appear here.',
 			'saved.empty_filtered_title' => 'No results',
@@ -451,6 +496,17 @@ extension on Translations {
 			'settings.dark' => 'Dark',
 			'settings.toggle_view' => 'Toggle view',
 			'settings.toggle_theme' => 'Toggle theme',
+			'settings.notifications' => 'Notification Service',
+			'settings.notifications_description' => 'Periodically monitor statuses and notify you when new content is available.',
+			'settings.notification_active' => 'Active',
+			'settings.notification_inactive' => 'Inactive',
+			'settings.notification_permission_title' => 'Notification Permission',
+			'settings.notification_permission_body' => 'Notifications will alert you when new statuses are available without opening the app.',
+			'settings.auto_save' => 'Auto-save',
+			'settings.auto_save_description' => 'Automatically save detected statuses to the app\'s folder.',
+			'settings.auto_save_active' => 'Enabled',
+			'settings.auto_save_inactive' => 'Disabled',
+			'settings.auto_save_storage' => ({required Object usage}) => 'Storage used: ${usage}',
 			'settings.help' => 'Help',
 			'settings.help_center' => 'Help Center',
 			'settings.about' => 'About',
