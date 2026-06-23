@@ -80,7 +80,7 @@ class _Translations$nav$es extends Translations$nav$en {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	@override String get statuses => 'Estados';
+	@override String get statuses => 'Historias';
 	@override String get saved => 'Guardados';
 }
 
@@ -115,8 +115,8 @@ class _Translations$saved$es extends Translations$saved$en {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	@override String get empty_title => 'Sin estados guardados';
-	@override String get empty_subtitle => 'Los estados que descargues aparecerán aquí.';
+	@override String get empty_title => 'Sin historias guardadas';
+	@override String get empty_subtitle => 'Las historias que descargues aparecerán aquí.';
 	@override String get empty_filtered_title => 'Sin resultados';
 	@override String get empty_filtered_subtitle => 'No hay archivos guardados de este tipo.';
 	@override String get delete_title => 'Eliminar archivos';
@@ -152,8 +152,8 @@ class _Translations$empty$es extends Translations$empty$en {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	@override String get default_title => 'No se encontraron estados';
-	@override String get default_subtitle => 'Abre WhatsApp, ve algunos estados y vuelve aquí.';
+	@override String get default_title => 'No se encontraron historias';
+	@override String get default_subtitle => 'Abre WhatsApp, ve algunas historias y vuelve aquí.';
 	@override String get saf_instructions => 'Si el problema persiste, concede acceso manual a la carpeta:';
 	@override String get saf_button => 'Seleccionar carpeta .Statuses';
 }
@@ -192,7 +192,7 @@ class _Translations$settings$es extends Translations$settings$en {
 	@override String get help_center => 'Centro de ayuda';
 	@override String get about => 'Acerca de';
 	@override String get app_name => 'Statuses';
-	@override String get app_description => 'Visualiza y gestiona archivos multimedia de estados de WhatsApp';
+	@override String get app_description => 'Visualiza y gestiona archivos multimedia de historias de WhatsApp';
 	@override String get version => 'Versión';
 }
 
@@ -207,12 +207,12 @@ class _Translations$help$es extends Translations$help$en {
 	@override String get how_to_use_title => 'Cómo usar';
 	@override String get grant_permissions_title => 'Conceder permisos';
 	@override String get grant_permissions_body => 'Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca "Conceder acceso" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.';
-	@override String get view_statuses_title => 'Ver estados';
-	@override String get view_statuses_body => 'Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.';
-	@override String get save_statuses_title => 'Guardar estados';
-	@override String get save_statuses_body => 'Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.';
+	@override String get view_statuses_title => 'Ver historias';
+	@override String get view_statuses_body => 'Abre WhatsApp y visualiza algunas historias. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.';
+	@override String get save_statuses_title => 'Guardar historias';
+	@override String get save_statuses_body => 'Toca una historia para abrirla en pantalla completa. Usa el botón de descarga o el menú para guardarla en tu dispositivo.';
 	@override String get share_content_title => 'Compartir contenido';
-	@override String get share_content_body => 'Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.';
+	@override String get share_content_body => 'Abre una historia y toca el botón de compartir o usa el menú para compartirla con otras aplicaciones.';
 	@override String get switch_view_title => 'Cambiar entre vista de cuadrícula y lista';
 	@override String get switch_view_body => 'Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.';
 	@override String get dark_mode_title => 'Modo oscuro';
@@ -234,7 +234,7 @@ extension on TranslationsEs {
 			'filter.all' => 'Todo',
 			'filter.photos' => 'Fotos',
 			'filter.videos' => 'Videos',
-			'nav.statuses' => 'Estados',
+			'nav.statuses' => 'Historias',
 			'nav.saved' => 'Guardados',
 			'detail.download' => 'Descargar',
 			'detail.share' => 'Compartir',
@@ -251,8 +251,8 @@ extension on TranslationsEs {
 			'detail.unsupported_file_type' => 'Tipo de archivo no soportado',
 			'detail.saved_successfully' => 'Archivo guardado correctamente',
 			'detail.video_badge' => 'VIDEO',
-			'saved.empty_title' => 'Sin estados guardados',
-			'saved.empty_subtitle' => 'Los estados que descargues aparecerán aquí.',
+			'saved.empty_title' => 'Sin historias guardadas',
+			'saved.empty_subtitle' => 'Las historias que descargues aparecerán aquí.',
 			'saved.empty_filtered_title' => 'Sin resultados',
 			'saved.empty_filtered_subtitle' => 'No hay archivos guardados de este tipo.',
 			'saved.delete_title' => 'Eliminar archivos',
@@ -270,8 +270,8 @@ extension on TranslationsEs {
 			'permission.permanently_denied' => 'El permiso fue denegado permanentemente.\nActívalo en Ajustes.',
 			'permission.open_settings' => 'Abrir Ajustes',
 			'permission.privacy_note' => 'Tus datos permanecen en tu dispositivo.\nStatuses no recopila ninguna información.',
-			'empty.default_title' => 'No se encontraron estados',
-			'empty.default_subtitle' => 'Abre WhatsApp, ve algunos estados y vuelve aquí.',
+			'empty.default_title' => 'No se encontraron historias',
+			'empty.default_subtitle' => 'Abre WhatsApp, ve algunas historias y vuelve aquí.',
 			'empty.saf_instructions' => 'Si el problema persiste, concede acceso manual a la carpeta:',
 			'empty.saf_button' => 'Seleccionar carpeta .Statuses',
 			'date.today' => 'Hoy',
@@ -292,18 +292,18 @@ extension on TranslationsEs {
 			'settings.help_center' => 'Centro de ayuda',
 			'settings.about' => 'Acerca de',
 			'settings.app_name' => 'Statuses',
-			'settings.app_description' => 'Visualiza y gestiona archivos multimedia de estados de WhatsApp',
+			'settings.app_description' => 'Visualiza y gestiona archivos multimedia de historias de WhatsApp',
 			'settings.version' => 'Versión',
 			'help.title' => 'Centro de ayuda',
 			'help.how_to_use_title' => 'Cómo usar',
 			'help.grant_permissions_title' => 'Conceder permisos',
 			'help.grant_permissions_body' => 'Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca "Conceder acceso" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.',
-			'help.view_statuses_title' => 'Ver estados',
-			'help.view_statuses_body' => 'Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.',
-			'help.save_statuses_title' => 'Guardar estados',
-			'help.save_statuses_body' => 'Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.',
+			'help.view_statuses_title' => 'Ver historias',
+			'help.view_statuses_body' => 'Abre WhatsApp y visualiza algunas historias. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.',
+			'help.save_statuses_title' => 'Guardar historias',
+			'help.save_statuses_body' => 'Toca una historia para abrirla en pantalla completa. Usa el botón de descarga o el menú para guardarla en tu dispositivo.',
 			'help.share_content_title' => 'Compartir contenido',
-			'help.share_content_body' => 'Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.',
+			'help.share_content_body' => 'Abre una historia y toca el botón de compartir o usa el menú para compartirla con otras aplicaciones.',
 			'help.switch_view_title' => 'Cambiar entre vista de cuadrícula y lista',
 			'help.switch_view_body' => 'Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.',
 			'help.dark_mode_title' => 'Modo oscuro',

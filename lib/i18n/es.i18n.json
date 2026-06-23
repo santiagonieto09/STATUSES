@@ -8,7 +8,7 @@
     "videos": "Videos"
   },
   "nav": {
-    "statuses": "Estados",
+    "statuses": "Historias",
     "saved": "Guardados"
   },
   "detail": {
@@ -16,9 +16,9 @@
     "share": "Compartir",
     "info": "Información",
     "close": "Cerrar",
-    "file_info": "Información del archivo",
+    "file_info": "Informaci\u00f3n del archivo",
     "name": "Nombre",
-    "size": "Tamaño",
+    "size": "Tama\u00f1o",
     "type": "Tipo",
     "date": "Fecha",
     "file_not_found": "Archivo no encontrado",
@@ -29,16 +29,16 @@
     "video_badge": "VIDEO"
   },
   "saved": {
-    "empty_title": "Sin estados guardados",
-    "empty_subtitle": "Los estados que descargues aparecerán aquí.",
+    "empty_title": "Sin historias guardadas",
+    "empty_subtitle": "Las historias que descargues aparecer\u00e1n aqu\u00ed.",
     "empty_filtered_title": "Sin resultados",
     "empty_filtered_subtitle": "No hay archivos guardados de este tipo.",
     "delete_title": "Eliminar archivos",
-    "delete_message": "Se eliminará(n) $count archivo(s) permanentemente.\nEsta acción no se puede deshacer.",
+    "delete_message": "Se eliminar\u00e1(n) $count archivo(s) permanentemente.\nEsta acci\u00f3n no se puede deshacer.",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "selected_count": "$count seleccionado(s)",
-    "cancel_selection_tooltip": "Cancelar selección",
+    "cancel_selection_tooltip": "Cancelar selecci\u00f3n",
     "delete_selected_tooltip": "Eliminar seleccionados",
     "file_count": "$count archivo(s)",
     "header_path": "Pictures/$dirName"
@@ -47,26 +47,26 @@
     "title": "Acceso al almacenamiento requerido",
     "description": "Statuses necesita acceso a tu almacenamiento para leer los archivos multimedia de estados de WhatsApp. Tus archivos permanecen en tu dispositivo.",
     "grant_access": "Conceder acceso",
-    "permanently_denied": "El permiso fue denegado permanentemente.\nActívalo en Ajustes.",
+    "permanently_denied": "El permiso fue denegado permanentemente.\nAct\u00edvalo en Ajustes.",
     "open_settings": "Abrir Ajustes",
-    "privacy_note": "Tus datos permanecen en tu dispositivo.\nStatuses no recopila ninguna información."
+    "privacy_note": "Tus datos permanecen en tu dispositivo.\nStatuses no recopila ninguna informaci\u00f3n."
   },
   "empty": {
-    "default_title": "No se encontraron estados",
-    "default_subtitle": "Abre WhatsApp, ve algunos estados y vuelve aquí.",
+    "default_title": "No se encontraron historias",
+    "default_subtitle": "Abre WhatsApp, ve algunas historias y vuelve aqu\u00ed.",
     "saf_instructions": "Si el problema persiste, concede acceso manual a la carpeta:",
     "saf_button": "Seleccionar carpeta .Statuses"
   },
   "date": {
     "today": "Hoy",
     "yesterday": "Ayer",
-    "days_ago": "hace $count días",
+    "days_ago": "hace $count d\u00edas",
     "week_ago": "hace 1 semana",
     "weeks_ago": "hace $count semanas",
     "at": "a las"
   },
   "settings": {
-    "title": "Configuración",
+    "title": "Configuraci\u00f3n",
     "appearance": "Apariencia",
     "language": "Idioma",
     "theme": "Tema",
@@ -78,26 +78,26 @@
     "help_center": "Centro de ayuda",
     "about": "Acerca de",
     "app_name": "Statuses",
-    "app_description": "Visualiza y gestiona archivos multimedia de estados de WhatsApp",
-    "version": "Versión"
+    "app_description": "Visualiza y gestiona archivos multimedia de historias de WhatsApp",
+    "version": "Versi\u00f3n"
   },
   "help": {
     "title": "Centro de ayuda",
-    "how_to_use_title": "Cómo usar",
+    "how_to_use_title": "C\u00f3mo usar",
     "grant_permissions_title": "Conceder permisos",
-    "grant_permissions_body": "Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca \"Conceder acceso\" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.",
-    "view_statuses_title": "Ver estados",
-    "view_statuses_body": "Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.",
-    "save_statuses_title": "Guardar estados",
-    "save_statuses_body": "Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.",
+    "grant_permissions_body": "Al abrir la app por primera vez, se solicitar\u00e1 acceso al almacenamiento. Toca \"Conceder acceso\" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.",
+    "view_statuses_title": "Ver historias",
+    "view_statuses_body": "Abre WhatsApp y visualiza algunas historias. Luego vuelve a Statuses y aparecer\u00e1n autom\u00e1ticamente. Usa los filtros para mostrar todo, fotos o videos.",
+    "save_statuses_title": "Guardar historias",
+    "save_statuses_body": "Toca una historia para abrirla en pantalla completa. Usa el bot\u00f3n de descarga o el men\u00fa para guardarla en tu dispositivo.",
     "share_content_title": "Compartir contenido",
-    "share_content_body": "Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.",
-    "switch_view_title": "Cambiar entre vista de cuadrícula y lista",
-    "switch_view_body": "Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.",
+    "share_content_body": "Abre una historia y toca el bot\u00f3n de compartir o usa el men\u00fa para compartirla con otras aplicaciones.",
+    "switch_view_title": "Cambiar entre vista de cuadr\u00edcula y lista",
+    "switch_view_body": "Toca el icono de cuadr\u00edcula/lista en la barra superior para alternar entre una vista compacta en cuadr\u00edcula y una vista detallada en lista.",
     "dark_mode_title": "Modo oscuro",
-    "dark_mode_body": "Puedes cambiar entre modo claro y oscuro en Configuración. La app también sigue el tema del sistema automáticamente.",
+    "dark_mode_body": "Puedes cambiar entre modo claro y oscuro en Configuraci\u00f3n. La app tambi\u00e9n sigue el tema del sistema autom\u00e1ticamente.",
     "faq_title": "Preguntas frecuentes",
-    "faq_encrypted_names_q": "¿Por qué los archivos tienen nombres extraños?",
-    "faq_encrypted_names_a": "WhatsApp almacena temporalmente los estados utilizando nombres internos generados automáticamente por el sistema. Estos nombres no corresponden al nombre original del archivo y son utilizados por WhatsApp para optimizar el almacenamiento y la gestión del contenido. Esto es completamente normal y no afecta la visualización ni el funcionamiento de los estados."
+    "faq_encrypted_names_q": "\u00bfPor qu\u00e9 los archivos tienen nombres extra\u00f1os?",
+    "faq_encrypted_names_a": "WhatsApp almacena temporalmente los estados utilizando nombres internos generados autom\u00e1ticamente por el sistema. Estos nombres no corresponden al nombre original del archivo y son utilizados por WhatsApp para optimizar el almacenamiento y la gesti\u00f3n del contenido. Esto es completamente normal y no afecta la visualizaci\u00f3n ni el funcionamiento de los estados."
   }
 }

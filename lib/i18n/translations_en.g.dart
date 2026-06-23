@@ -90,8 +90,8 @@ class Translations$nav$en {
 
 	// Translations
 
-	/// en: 'Statuses'
-	String get statuses => 'Statuses';
+	/// en: 'Stories'
+	String get statuses => 'Stories';
 
 	/// en: 'Saved'
 	String get saved => 'Saved';
@@ -159,11 +159,11 @@ class Translations$saved$en {
 
 	// Translations
 
-	/// en: 'No saved statuses'
-	String get empty_title => 'No saved statuses';
+	/// en: 'No saved stories'
+	String get empty_title => 'No saved stories';
 
-	/// en: 'Statuses you download will appear here.'
-	String get empty_subtitle => 'Statuses you download will appear here.';
+	/// en: 'Stories you download will appear here.'
+	String get empty_subtitle => 'Stories you download will appear here.';
 
 	/// en: 'No results'
 	String get empty_filtered_title => 'No results';
@@ -234,11 +234,11 @@ class Translations$empty$en {
 
 	// Translations
 
-	/// en: 'No statuses found'
-	String get default_title => 'No statuses found';
+	/// en: 'No stories found'
+	String get default_title => 'No stories found';
 
-	/// en: 'Open WhatsApp, view some statuses, then come back here.'
-	String get default_subtitle => 'Open WhatsApp, view some statuses, then come back here.';
+	/// en: 'Open WhatsApp, view some stories, then come back here.'
+	String get default_subtitle => 'Open WhatsApp, view some stories, then come back here.';
 
 	/// en: 'If the problem persists, grant manual access to the folder:'
 	String get saf_instructions => 'If the problem persists, grant manual access to the folder:';
@@ -318,8 +318,8 @@ class Translations$settings$en {
 	/// en: 'Statuses'
 	String get app_name => 'Statuses';
 
-	/// en: 'View and manage WhatsApp status media files'
-	String get app_description => 'View and manage WhatsApp status media files';
+	/// en: 'View and manage WhatsApp story media files'
+	String get app_description => 'View and manage WhatsApp story media files';
 
 	/// en: 'Version'
 	String get version => 'Version';
@@ -345,23 +345,23 @@ class Translations$help$en {
 	/// en: 'On first launch, the app will ask for storage access. Tap "Grant Access" to allow reading WhatsApp status files. Your files stay on your device.'
 	String get grant_permissions_body => 'On first launch, the app will ask for storage access. Tap "Grant Access" to allow reading WhatsApp status files. Your files stay on your device.';
 
-	/// en: 'View statuses'
-	String get view_statuses_title => 'View statuses';
+	/// en: 'View stories'
+	String get view_statuses_title => 'View stories';
 
-	/// en: 'Open WhatsApp and view some statuses. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.'
-	String get view_statuses_body => 'Open WhatsApp and view some statuses. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.';
+	/// en: 'Open WhatsApp and view some stories. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.'
+	String get view_statuses_body => 'Open WhatsApp and view some stories. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.';
 
-	/// en: 'Save statuses'
-	String get save_statuses_title => 'Save statuses';
+	/// en: 'Save stories'
+	String get save_statuses_title => 'Save stories';
 
-	/// en: 'Tap a status to open it in full screen. Use the Download button or the menu to save it to your device.'
-	String get save_statuses_body => 'Tap a status to open it in full screen. Use the Download button or the menu to save it to your device.';
+	/// en: 'Tap a story to open it in full screen. Use the Download button or the menu to save it to your device.'
+	String get save_statuses_body => 'Tap a story to open it in full screen. Use the Download button or the menu to save it to your device.';
 
 	/// en: 'Share content'
 	String get share_content_title => 'Share content';
 
-	/// en: 'Open a status and tap the Share button or use the menu to share it with other apps.'
-	String get share_content_body => 'Open a status and tap the Share button or use the menu to share it with other apps.';
+	/// en: 'Open a story and tap the Share button or use the menu to share it with other apps.'
+	String get share_content_body => 'Open a story and tap the Share button or use the menu to share it with other apps.';
 
 	/// en: 'Switch between grid and list view'
 	String get switch_view_title => 'Switch between grid and list view';
@@ -397,7 +397,7 @@ extension on Translations {
 			'filter.all' => 'All',
 			'filter.photos' => 'Photos',
 			'filter.videos' => 'Videos',
-			'nav.statuses' => 'Statuses',
+			'nav.statuses' => 'Stories',
 			'nav.saved' => 'Saved',
 			'detail.download' => 'Download',
 			'detail.share' => 'Share',
@@ -414,8 +414,8 @@ extension on Translations {
 			'detail.unsupported_file_type' => 'Unsupported file type',
 			'detail.saved_successfully' => 'File saved successfully',
 			'detail.video_badge' => 'VIDEO',
-			'saved.empty_title' => 'No saved statuses',
-			'saved.empty_subtitle' => 'Statuses you download will appear here.',
+			'saved.empty_title' => 'No saved stories',
+			'saved.empty_subtitle' => 'Stories you download will appear here.',
 			'saved.empty_filtered_title' => 'No results',
 			'saved.empty_filtered_subtitle' => 'No saved files of this type.',
 			'saved.delete_title' => 'Delete files',
@@ -433,8 +433,8 @@ extension on Translations {
 			'permission.permanently_denied' => 'Permission was permanently denied.\nPlease enable it in Settings.',
 			'permission.open_settings' => 'Open Settings',
 			'permission.privacy_note' => 'Your data stays on your device.\nStatuses does not collect any information.',
-			'empty.default_title' => 'No statuses found',
-			'empty.default_subtitle' => 'Open WhatsApp, view some statuses, then come back here.',
+			'empty.default_title' => 'No stories found',
+			'empty.default_subtitle' => 'Open WhatsApp, view some stories, then come back here.',
 			'empty.saf_instructions' => 'If the problem persists, grant manual access to the folder:',
 			'empty.saf_button' => 'Select .Statuses folder',
 			'date.today' => 'Today',
@@ -455,18 +455,18 @@ extension on Translations {
 			'settings.help_center' => 'Help Center',
 			'settings.about' => 'About',
 			'settings.app_name' => 'Statuses',
-			'settings.app_description' => 'View and manage WhatsApp status media files',
+			'settings.app_description' => 'View and manage WhatsApp story media files',
 			'settings.version' => 'Version',
 			'help.title' => 'Help Center',
 			'help.how_to_use_title' => 'How to use',
 			'help.grant_permissions_title' => 'Grant permissions',
 			'help.grant_permissions_body' => 'On first launch, the app will ask for storage access. Tap "Grant Access" to allow reading WhatsApp status files. Your files stay on your device.',
-			'help.view_statuses_title' => 'View statuses',
-			'help.view_statuses_body' => 'Open WhatsApp and view some statuses. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.',
-			'help.save_statuses_title' => 'Save statuses',
-			'help.save_statuses_body' => 'Tap a status to open it in full screen. Use the Download button or the menu to save it to your device.',
+			'help.view_statuses_title' => 'View stories',
+			'help.view_statuses_body' => 'Open WhatsApp and view some stories. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.',
+			'help.save_statuses_title' => 'Save stories',
+			'help.save_statuses_body' => 'Tap a story to open it in full screen. Use the Download button or the menu to save it to your device.',
 			'help.share_content_title' => 'Share content',
-			'help.share_content_body' => 'Open a status and tap the Share button or use the menu to share it with other apps.',
+			'help.share_content_body' => 'Open a story and tap the Share button or use the menu to share it with other apps.',
 			'help.switch_view_title' => 'Switch between grid and list view',
 			'help.switch_view_body' => 'Tap the grid/list icon in the app bar to toggle between a compact grid view and a detailed list view.',
 			'help.dark_mode_title' => 'Dark mode',

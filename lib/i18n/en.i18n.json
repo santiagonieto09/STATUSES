@@ -8,7 +8,7 @@
     "videos": "Videos"
   },
   "nav": {
-    "statuses": "Statuses",
+    "statuses": "Stories",
     "saved": "Saved"
   },
   "detail": {
@@ -29,8 +29,8 @@
     "video_badge": "VIDEO"
   },
   "saved": {
-    "empty_title": "No saved statuses",
-    "empty_subtitle": "Statuses you download will appear here.",
+    "empty_title": "No saved stories",
+    "empty_subtitle": "Stories you download will appear here.",
     "empty_filtered_title": "No results",
     "empty_filtered_subtitle": "No saved files of this type.",
     "delete_title": "Delete files",
@@ -52,8 +52,8 @@
     "privacy_note": "Your data stays on your device.\nStatuses does not collect any information."
   },
   "empty": {
-    "default_title": "No statuses found",
-    "default_subtitle": "Open WhatsApp, view some statuses, then come back here.",
+    "default_title": "No stories found",
+    "default_subtitle": "Open WhatsApp, view some stories, then come back here.",
     "saf_instructions": "If the problem persists, grant manual access to the folder:",
     "saf_button": "Select .Statuses folder"
   },
@@ -78,7 +78,7 @@
     "help_center": "Help Center",
     "about": "About",
     "app_name": "Statuses",
-    "app_description": "View and manage WhatsApp status media files",
+    "app_description": "View and manage WhatsApp story media files",
     "version": "Version"
   },
   "help": {
@@ -86,12 +86,12 @@
     "how_to_use_title": "How to use",
     "grant_permissions_title": "Grant permissions",
     "grant_permissions_body": "On first launch, the app will ask for storage access. Tap \"Grant Access\" to allow reading WhatsApp status files. Your files stay on your device.",
-    "view_statuses_title": "View statuses",
-    "view_statuses_body": "Open WhatsApp and view some statuses. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.",
-    "save_statuses_title": "Save statuses",
-    "save_statuses_body": "Tap a status to open it in full screen. Use the Download button or the menu to save it to your device.",
+    "view_statuses_title": "View stories",
+    "view_statuses_body": "Open WhatsApp and view some stories. Then come back to Statuses and they will appear automatically. Use the filter chips to show all, photos, or videos.",
+    "save_statuses_title": "Save stories",
+    "save_statuses_body": "Tap a story to open it in full screen. Use the Download button or the menu to save it to your device.",
     "share_content_title": "Share content",
-    "share_content_body": "Open a status and tap the Share button or use the menu to share it with other apps.",
+    "share_content_body": "Open a story and tap the Share button or use the menu to share it with other apps.",
     "switch_view_title": "Switch between grid and list view",
     "switch_view_body": "Tap the grid/list icon in the app bar to toggle between a compact grid view and a detailed list view.",
     "dark_mode_title": "Dark mode",
