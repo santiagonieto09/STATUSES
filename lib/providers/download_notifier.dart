@@ -10,6 +10,7 @@ import 'package:statuses/utils/file_utils.dart';
 
 class DownloadNotifier extends ChangeNotifier {
   static const String _autoSavePrefsKey = 'auto_save_enabled';
+  static const String _autoSaveWarningKey = 'auto_save_warning_dismissed';
 
   final DownloadService _service = DownloadService();
 
@@ -23,9 +24,13 @@ class DownloadNotifier extends ChangeNotifier {
   bool _isSavedLoading = false;
 
   bool _autoSaveEnabled = false;
+  bool _autoSaveWarningDismissed = false;
+  bool _isDeleting = false;
   String _autoSaveStorageInfo = '';
   Timer? _autoSaveTimer;
   StatusNotifier? _statusNotifier;
+  final Set<String> _processingPaths = {};
+  final Set<String> _processedSourcePaths = {};
 
   bool get isDownloading => _isDownloading;
   String? get lastDownloadedPath => _lastDownloadedPath;
@@ -36,8 +41,10 @@ class DownloadNotifier extends ChangeNotifier {
   bool get isSavedLoading => _isSavedLoading;
   bool get hasSaved => _savedStatuses.isNotEmpty;
   Set<String> get savedFilePaths => _cachedSavedFilePaths;
+  bool get isDeleting => _isDeleting;
 
   bool get autoSaveEnabled => _autoSaveEnabled;
+  bool get autoSaveWarningDismissed => _autoSaveWarningDismissed;
   String get autoSaveStorageInfo => _autoSaveStorageInfo;
 
   DownloadNotifier();
@@ -50,11 +57,33 @@ class DownloadNotifier extends ChangeNotifier {
     _autoSaveStorageInfo = await _service.getStorageUsage();
   }
 
+  Future<void> loadAutoSavePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    _autoSaveEnabled = prefs.getBool(_autoSavePrefsKey) ?? false;
+    _autoSaveWarningDismissed = prefs.getBool(_autoSaveWarningKey) ?? false;
+    await _updateStorageInfo();
+    if (_autoSaveEnabled) _startAutoSaveTimer();
+    notifyListeners();
+  }
+
+  Future<void> dismissAutoSaveWarning() async {
+    _autoSaveWarningDismissed = true;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoSaveWarningKey, true);
+  }
+
+  Future<void> resetAutoSaveWarning() async {
+    _autoSaveWarningDismissed = false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoSaveWarningKey, false);
+  }
+
   Future<void> toggleAutoSave(bool enabled) async {
     _autoSaveEnabled = enabled;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_autoSavePrefsKey, enabled);
     if (enabled) {
+      _processedSourcePaths.clear();
       await _syncOnAutoSaveEnable();
       _startAutoSaveTimer();
     } else {
@@ -70,11 +99,20 @@ class DownloadNotifier extends ChangeNotifier {
     final statuses = _statusNotifier!.filteredStatuses;
     await _loadSaved();
     for (final status in statuses) {
-      if (!_cachedSavedFilePaths.contains(status.fileName)) {
-        final alreadySaved = await _isAlreadySavedByHash(status);
-        if (!alreadySaved) {
-          await _service.downloadStatus(status);
-        }
+      if (_processingPaths.contains(status.filePath)) continue;
+      if (_processedSourcePaths.contains(status.filePath)) continue;
+      if (_cachedSavedFilePaths.contains(status.fileName)) continue;
+      final alreadySaved = await _isAlreadySavedByHash(status);
+      if (alreadySaved) {
+        _processedSourcePaths.add(status.filePath);
+        continue;
+      }
+      _processingPaths.add(status.filePath);
+      try {
+        await _service.downloadStatus(status);
+        _processedSourcePaths.add(status.filePath);
+      } finally {
+        _processingPaths.remove(status.filePath);
       }
     }
   }
@@ -111,11 +149,20 @@ class DownloadNotifier extends ChangeNotifier {
     if (!_autoSaveEnabled || _statusNotifier == null) return;
     await _loadSaved();
     for (final status in _statusNotifier!.filteredStatuses) {
-      if (!_cachedSavedFilePaths.contains(status.fileName)) {
-        final alreadySaved = await _isAlreadySavedByHash(status);
-        if (!alreadySaved) {
-          await _service.downloadStatus(status);
-        }
+      if (_processingPaths.contains(status.filePath)) continue;
+      if (_processedSourcePaths.contains(status.filePath)) continue;
+      if (_cachedSavedFilePaths.contains(status.fileName)) continue;
+      final alreadySaved = await _isAlreadySavedByHash(status);
+      if (alreadySaved) {
+        _processedSourcePaths.add(status.filePath);
+        continue;
+      }
+      _processingPaths.add(status.filePath);
+      try {
+        await _service.downloadStatus(status);
+        _processedSourcePaths.add(status.filePath);
+      } finally {
+        _processingPaths.remove(status.filePath);
       }
     }
     await _loadSaved();
@@ -136,14 +183,21 @@ class DownloadNotifier extends ChangeNotifier {
 
   Future<void> autoSaveStatus(StatusFile status) async {
     if (!_autoSaveEnabled) return;
+    if (_processingPaths.contains(status.filePath)) return;
+    if (_processedSourcePaths.contains(status.filePath)) return;
+    if (_cachedSavedFilePaths.contains(status.fileName)) return;
+    _processingPaths.add(status.filePath);
     try {
       final alreadySaved = await _isAlreadySavedByHash(status);
       if (!alreadySaved) {
         await _service.downloadStatus(status);
       }
+      _processedSourcePaths.add(status.filePath);
       await _updateStorageInfo();
     } catch (e) {
       debugPrint('Auto-save falló para ${status.fileName}: $e');
+    } finally {
+      _processingPaths.remove(status.filePath);
     }
   }
 
@@ -207,6 +261,8 @@ class DownloadNotifier extends ChangeNotifier {
   }
 
   Future<void> deleteSavedStatuses(List<String> paths) async {
+    _isDeleting = true;
+    notifyListeners();
     for (final path in paths) {
       try {
         final file = File(path);
@@ -215,6 +271,7 @@ class DownloadNotifier extends ChangeNotifier {
     }
     await _loadSaved();
     await _updateStorageInfo();
+    _isDeleting = false;
     notifyListeners();
   }
 
