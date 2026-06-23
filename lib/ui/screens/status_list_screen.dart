@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statuses/data/models/status_file.dart';
+import 'package:statuses/data/services/share_service.dart';
 import 'package:statuses/i18n/translations.g.dart';
 import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/ui/screens/status_detail_screen.dart';
@@ -52,6 +53,7 @@ class StatusListScreen extends StatelessWidget {
                 ),
               ),
             ),
+            onRepost: () => ShareService().repostToWhatsApp(status),
           );
         },
       ),
