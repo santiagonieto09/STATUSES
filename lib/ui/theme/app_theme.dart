@@ -15,6 +15,7 @@ class AppColors {
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color dividerDark = Color(0xFF313D45);
   static const Color dividerLight = Color(0xFFE9EDEF);
+  static const Color badgeGreen = Color(0xFF008069);
 }
 
 class AppDurations {

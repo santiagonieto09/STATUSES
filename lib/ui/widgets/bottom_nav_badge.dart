@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:statuses/ui/theme/app_theme.dart';
 
 class BottomNavBadge extends StatelessWidget {
   final int count;
@@ -12,6 +13,7 @@ class BottomNavBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -24,7 +26,7 @@ class BottomNavBadge extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               constraints: const BoxConstraints(minWidth: 16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: isDark ? AppColors.badgeGreen : Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
