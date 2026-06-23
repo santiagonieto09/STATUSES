@@ -5,6 +5,8 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 enum PermissionState { granted, denied, permanentlyDenied }
 
 class PermissionService {
+  int? _cachedSdkVersion;
+
   PermissionState _checkPermissionState(ph.PermissionStatus status) {
     if (status.isGranted) return PermissionState.granted;
     if (status.isPermanentlyDenied) return PermissionState.permanentlyDenied;
@@ -13,9 +15,11 @@ class PermissionService {
 
   Future<int> _androidSdkVersion() async {
     if (!Platform.isAndroid) return 0;
+    if (_cachedSdkVersion != null) return _cachedSdkVersion!;
     final deviceInfo = DeviceInfoPlugin();
     final androidInfo = await deviceInfo.androidInfo;
-    return androidInfo.version.sdkInt;
+    _cachedSdkVersion = androidInfo.version.sdkInt;
+    return _cachedSdkVersion!;
   }
 
   Future<PermissionState> requestStoragePermission() async {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statuses/providers/theme_notifier.dart';
+import 'package:statuses/data/services/permission_service.dart';
 import 'package:statuses/ui/screens/app_shell.dart';
+import 'package:statuses/ui/screens/app_startup_screen.dart';
 import 'package:statuses/ui/screens/permission_screen.dart';
 import 'package:statuses/ui/theme/dark_theme.dart';
 import 'package:statuses/ui/theme/light_theme.dart';
@@ -19,9 +21,14 @@ class StatusesApp extends StatelessWidget {
           theme: LightTheme.theme,
           darkTheme: DarkTheme.theme,
           themeMode: themeNotifier.themeMode,
-          initialRoute: '/permission',
+          initialRoute: '/',
           routes: {
-            '/permission': (_) => const PermissionScreen(),
+            '/': (_) => const AppStartupScreen(),
+            '/permission': (context) {
+              final state =
+                  ModalRoute.of(context)?.settings.arguments as PermissionState?;
+              return PermissionScreen(initialState: state);
+            },
             '/home': (_) => const AppShell(),
           },
         );
