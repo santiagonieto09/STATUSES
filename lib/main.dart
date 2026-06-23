@@ -43,7 +43,13 @@ void main() async {
               ChangeNotifierProvider(
                 create: (_) => StatusNotifier(StatusRepository()),
               ),
-              ChangeNotifierProvider(create: (_) => DownloadNotifier()),
+              ChangeNotifierProvider(
+                create: (ctx) {
+                  final notifier = DownloadNotifier();
+                  notifier.attachStatusNotifier(ctx.read<StatusNotifier>());
+                  return notifier;
+                },
+              ),
               Provider(create: (_) => ShareService()),
               ChangeNotifierProvider(
                 create: (ctx) => NotificationNotifier(ctx.read<StatusNotifier>()),

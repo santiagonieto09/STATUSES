@@ -52,29 +52,104 @@ class HelpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
+              t.help.notification_service_title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            _HelpCard(
+              icon: Icons.notifications_active_rounded,
+              title: t.help.notification_service_title,
+              body: t.help.notification_service_body,
+            ),
+            _HelpCard(
+              icon: Icons.save_alt_rounded,
+              title: t.help.auto_save_title,
+              body: t.help.auto_save_body,
+            ),
+            _HelpCard(
+              icon: Icons.check_circle_rounded,
+              title: t.help.saved_indicator_title,
+              body: t.help.saved_indicator_body,
+            ),
+            _HelpCard(
+              icon: Icons.repeat_rounded,
+              title: t.help.share_vs_repost_title,
+              body: t.help.share_vs_repost_body,
+            ),
+            _HelpCard(
+              icon: Icons.sync_rounded,
+              title: t.help.sync_title,
+              body: t.help.sync_body,
+            ),
+            _HelpCard(
+              icon: Icons.storage_rounded,
+              title: t.help.storage_title,
+              body: t.help.storage_body,
+            ),
+            _HelpCard(
+              icon: Icons.build_rounded,
+              title: t.help.troubleshooting_title,
+              body: t.help.troubleshooting_body,
+            ),
+            _HelpCard(
+              icon: Icons.security_rounded,
+              title: t.help.permissions_title,
+              body: t.help.permissions_body,
+            ),
+            _HelpCard(
+              icon: Icons.explore_rounded,
+              title: t.help.stories_explanation_title,
+              body: t.help.stories_explanation_body,
+            ),
+            _HelpCard(
+              icon: Icons.dashboard_rounded,
+              title: t.help.icons_badges_title,
+              body: t.help.icons_badges_body,
+            ),
+            const SizedBox(height: 24),
+            Text(
               t.help.faq_title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             const SizedBox(height: 12),
-            Card(
-              child: ExpansionTile(
-                leading: const Icon(Icons.help_outline_rounded),
-                title: Text(t.help.faq_encrypted_names_q),
-                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                children: [
-                  Text(
-                    t.help.faq_encrypted_names_a,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.7),
-                        ),
-                  ),
-                ],
-              ),
+            _FaqTile(
+              icon: Icons.help_outline_rounded,
+              question: t.help.faq_encrypted_names_q,
+              answer: t.help.faq_encrypted_names_a,
+            ),
+            _FaqTile(
+              icon: Icons.content_copy_rounded,
+              question: t.help.faq_duplicates_q,
+              answer: t.help.faq_duplicates_a,
+            ),
+            _FaqTile(
+              icon: Icons.notifications_rounded,
+              question: t.help.faq_notifications_q,
+              answer: t.help.faq_notifications_a,
+            ),
+            _FaqTile(
+              icon: Icons.save_rounded,
+              question: t.help.faq_auto_save_q,
+              answer: t.help.faq_auto_save_a,
+            ),
+            _FaqTile(
+              icon: Icons.translate_rounded,
+              question: t.help.faq_language_q,
+              answer: t.help.faq_language_a,
+            ),
+            _FaqTile(
+              icon: Icons.storage_rounded,
+              question: t.help.faq_storage_q,
+              answer: t.help.faq_storage_a,
+            ),
+            _FaqTile(
+              icon: Icons.business_rounded,
+              question: t.help.faq_whatsapp_q,
+              answer: t.help.faq_whatsapp_a,
             ),
           ],
         ),
@@ -130,6 +205,46 @@ class _HelpCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FaqTile extends StatelessWidget {
+  final IconData icon;
+  final String question;
+  final String answer;
+
+  const _FaqTile({
+    required this.icon,
+    required this.question,
+    required this.answer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ExpansionTile(
+        leading: Icon(icon),
+        title: Text(
+          question,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+        ),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: [
+          Text(
+            answer,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+          ),
+        ],
       ),
     );
   }

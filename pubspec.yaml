@@ -28,6 +28,7 @@ dependencies:
   slang_flutter: ^4.5.0
   flutter_local_notifications: ^18.0.1
   url_launcher: ^6.3.2
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   build_runner: ^2.4.0
   slang_build_runner: ^4.5.0
+  mockito: ^5.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

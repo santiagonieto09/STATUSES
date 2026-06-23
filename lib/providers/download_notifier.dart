@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/data/services/download_service.dart';
+import 'package:statuses/providers/status_notifier.dart';
+import 'package:statuses/utils/file_utils.dart';
 
 class DownloadNotifier extends ChangeNotifier {
   static const String _autoSavePrefsKey = 'auto_save_enabled';
@@ -16,10 +19,13 @@ class DownloadNotifier extends ChangeNotifier {
 
   List<StatusFile> _savedStatuses = [];
   Set<String> _cachedSavedFilePaths = {};
+  final Map<String, String> _hashCache = {};
   bool _isSavedLoading = false;
 
   bool _autoSaveEnabled = false;
   String _autoSaveStorageInfo = '';
+  Timer? _autoSaveTimer;
+  StatusNotifier? _statusNotifier;
 
   bool get isDownloading => _isDownloading;
   String? get lastDownloadedPath => _lastDownloadedPath;
@@ -34,15 +40,14 @@ class DownloadNotifier extends ChangeNotifier {
   bool get autoSaveEnabled => _autoSaveEnabled;
   String get autoSaveStorageInfo => _autoSaveStorageInfo;
 
-  DownloadNotifier() {
-    _loadAutoSavePreference();
+  DownloadNotifier();
+
+  void attachStatusNotifier(StatusNotifier notifier) {
+    _statusNotifier = notifier;
   }
 
-  Future<void> _loadAutoSavePreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    _autoSaveEnabled = prefs.getBool(_autoSavePrefsKey) ?? false;
-    await _updateStorageInfo();
-    notifyListeners();
+  Future<void> _updateStorageInfo() async {
+    _autoSaveStorageInfo = await _service.getStorageUsage();
   }
 
   Future<void> toggleAutoSave(bool enabled) async {
@@ -50,31 +55,92 @@ class DownloadNotifier extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_autoSavePrefsKey, enabled);
     if (enabled) {
-      await _loadSaved();
-      await _updateStorageInfo();
+      await _syncOnAutoSaveEnable();
+      _startAutoSaveTimer();
+    } else {
+      _stopAutoSaveTimer();
     }
+    await _loadSaved();
+    await _updateStorageInfo();
     notifyListeners();
   }
 
-  Future<String> _updateStorageInfo() async {
-    _autoSaveStorageInfo = await _service.getStorageUsage();
-    return _autoSaveStorageInfo;
+  Future<void> _syncOnAutoSaveEnable() async {
+    if (_statusNotifier == null) return;
+    final statuses = _statusNotifier!.filteredStatuses;
+    await _loadSaved();
+    for (final status in statuses) {
+      if (!_cachedSavedFilePaths.contains(status.fileName)) {
+        final alreadySaved = await _isAlreadySavedByHash(status);
+        if (!alreadySaved) {
+          await _service.downloadStatus(status);
+        }
+      }
+    }
+  }
+
+  Future<bool> _isAlreadySavedByHash(StatusFile status) async {
+    final sourceHash = await _getOrComputeHash(status.filePath);
+    for (final saved in _savedStatuses) {
+      final savedHash = await _getOrComputeHash(saved.filePath);
+      if (savedHash == sourceHash) return true;
+    }
+    return false;
+  }
+
+  Future<String> _getOrComputeHash(String filePath) async {
+    if (_hashCache.containsKey(filePath)) return _hashCache[filePath]!;
+    final hash = await FileUtils.computeFileHash(filePath);
+    _hashCache[filePath] = hash;
+    return hash;
+  }
+
+  void _startAutoSaveTimer() {
+    _stopAutoSaveTimer();
+    _autoSaveTimer = Timer.periodic(const Duration(seconds: 60), (_) {
+      _checkAutoSave();
+    });
+  }
+
+  void _stopAutoSaveTimer() {
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = null;
+  }
+
+  Future<void> _checkAutoSave() async {
+    if (!_autoSaveEnabled || _statusNotifier == null) return;
+    await _loadSaved();
+    for (final status in _statusNotifier!.filteredStatuses) {
+      if (!_cachedSavedFilePaths.contains(status.fileName)) {
+        final alreadySaved = await _isAlreadySavedByHash(status);
+        if (!alreadySaved) {
+          await _service.downloadStatus(status);
+        }
+      }
+    }
+    await _loadSaved();
+    await _updateStorageInfo();
+    notifyListeners();
   }
 
   Future<bool> isStatusSaved(String filePath) async {
     final fileName = filePath.split('/').last;
+    if (_cachedSavedFilePaths.contains(fileName)) return true;
     try {
       final dir = await _service.getDownloadDirectory();
-      return await File('$dir/$fileName').exists();
-    } catch (_) {
-      return false;
-    }
+      final destFile = File('$dir/$fileName');
+      if (await destFile.exists()) return true;
+    } catch (_) {}
+    return false;
   }
 
   Future<void> autoSaveStatus(StatusFile status) async {
     if (!_autoSaveEnabled) return;
     try {
-      await _service.downloadStatus(status);
+      final alreadySaved = await _isAlreadySavedByHash(status);
+      if (!alreadySaved) {
+        await _service.downloadStatus(status);
+      }
       await _updateStorageInfo();
     } catch (e) {
       debugPrint('Auto-save falló para ${status.fileName}: $e');
@@ -82,6 +148,11 @@ class DownloadNotifier extends ChangeNotifier {
   }
 
   Future<void> downloadStatus(StatusFile status) async {
+    if (_cachedSavedFilePaths.contains(status.fileName)) {
+      _error = 'El archivo ya está guardado';
+      notifyListeners();
+      return;
+    }
     _isDownloading = true;
     _error = null;
     notifyListeners();
@@ -140,8 +211,7 @@ class DownloadNotifier extends ChangeNotifier {
       try {
         final file = File(path);
         if (await file.exists()) await file.delete();
-      } catch (_) {
-      }
+      } catch (_) {}
     }
     await _loadSaved();
     await _updateStorageInfo();
@@ -152,5 +222,11 @@ class DownloadNotifier extends ChangeNotifier {
     _lastDownloadedPath = null;
     _error = null;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _stopAutoSaveTimer();
+    super.dispose();
   }
 }

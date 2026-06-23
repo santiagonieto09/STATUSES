@@ -6,9 +6,8 @@ import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/utils/file_utils.dart';
 
 class DownloadService {
-  /// Devuelve la ruta del directorio público donde se guardan los estados.
-  /// En Android usa Pictures/Statuses (visible en Galería y Archivos).
-  /// Deriva la ruta desde el directorio privado de la app vía pure Dart.
+  final Map<String, String> _hashCache = {};
+
   Future<String> getDownloadDirectory() async {
     final basePath = _derivedPublicPath(await getExternalStorageDirectory());
     final dir = Directory('$basePath/${AppConstants.savedDirName}');
@@ -16,23 +15,28 @@ class DownloadService {
     return dir.path;
   }
 
-  /// Deriva /storage/emulated/0/Pictures desde la ruta privada de la app.
   String _derivedPublicPath(Directory? extDir) {
     if (extDir == null) return '/storage/emulated/0/Pictures';
-    // extDir.path = /storage/emulated/0/Android/data/com.statuses.statuses/files
     return '${extDir.path.split('/Android/').first}/Pictures';
   }
 
-  /// Descarga (copia) un estado a la carpeta pública Pictures/Statuses.
-  /// Retorna la ruta completa donde se guardó el archivo.
   Future<String> downloadStatus(StatusFile status) async {
     final destDir = await getDownloadDirectory();
     final sourceFile = File(status.filePath);
     final destPath = '$destDir/${status.fileName}';
-    final destFile = File(destPath);
 
+    final sourceHash = await _getOrComputeHash(status.filePath);
+
+    final existingFiles = await _listSavedFiles(destDir);
+    for (final existing in existingFiles) {
+      final existingHash = await _getOrComputeHash(existing.path);
+      if (existingHash == sourceHash) {
+        return existing.path;
+      }
+    }
+
+    final destFile = File(destPath);
     if (await destFile.exists()) {
-      // Evitar sobreescribir: añade un contador al nombre
       int counter = 1;
       String newPath;
       do {
@@ -48,7 +52,23 @@ class DownloadService {
     return destPath;
   }
 
-  /// Escanea la carpeta de descargas y retorna la lista de archivos guardados.
+  Future<String> _getOrComputeHash(String filePath) async {
+    if (_hashCache.containsKey(filePath)) return _hashCache[filePath]!;
+    final hash = await FileUtils.computeFileHash(filePath);
+    _hashCache[filePath] = hash;
+    return hash;
+  }
+
+  Future<List<File>> _listSavedFiles(String destDir) async {
+    final dir = Directory(destDir);
+    if (!await dir.exists()) return [];
+    final files = <File>[];
+    await for (final entity in dir.list()) {
+      if (entity is File) files.add(entity);
+    }
+    return files;
+  }
+
   Future<List<StatusFile>> getSavedStatuses() async {
     final String destDir;
     try {

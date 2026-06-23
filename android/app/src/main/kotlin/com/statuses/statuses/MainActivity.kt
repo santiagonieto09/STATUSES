@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 
 class MainActivity : FlutterActivity() {
 
@@ -22,7 +24,6 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler { call, result ->
                 when (call.method) {
 
-                    // Abre el selector de directorio SAF y persiste el permiso de lectura
                     "openDocumentTree" -> {
                         pendingResult = result
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
@@ -34,7 +35,6 @@ class MainActivity : FlutterActivity() {
                         startActivityForResult(intent, SAF_REQUEST_CODE)
                     }
 
-                    // Lista los archivos en un directorio SAF (sin subdirectorios)
                     "listFiles" -> {
                         val uriString = call.argument<String>("uri")
                         if (uriString == null) {
@@ -61,7 +61,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // Copia un archivo SAF a una ruta local del cache (streaming, sin cargar en RAM)
                     "copyFileToCache" -> {
                         val uriString = call.argument<String>("uri")
                         val destPath = call.argument<String>("destPath")
@@ -72,7 +71,7 @@ class MainActivity : FlutterActivity() {
                         try {
                             val uri = Uri.parse(uriString)
                             contentResolver.openInputStream(uri)?.use { input ->
-                                java.io.File(destPath).outputStream().use { output ->
+                                File(destPath).outputStream().use { output ->
                                     input.copyTo(output)
                                 }
                             }
@@ -82,7 +81,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // Devuelve los permisos URI persistidos en el dispositivo
                     "getPersistedPermissions" -> {
                         val perms = contentResolver.persistedUriPermissions.map {
                             mapOf(
@@ -94,7 +92,6 @@ class MainActivity : FlutterActivity() {
                         result.success(perms)
                     }
 
-                    // Libera un permiso URI persistido previamente
                     "releasePermission" -> {
                         val uriString = call.argument<String>("uri")
                         if (uriString == null) {
@@ -113,12 +110,52 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // Devuelve la ruta del directorio publico Pictures del almacenamiento primario
                     "getPublicPicturesPath" -> {
                         val dir = Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_PICTURES
                         )
                         result.success(dir.absolutePath)
+                    }
+
+                    "shareToWhatsAppStatus" -> {
+                        val filePath = call.argument<String>("filePath")
+                        val mimeType = call.argument<String>("mimeType") ?: "image/*"
+                        if (filePath == null) {
+                            result.error("INVALID_ARGS", "Se requiere 'filePath'", null)
+                            return@setMethodCallHandler
+                        }
+                        try {
+                            val file = File(filePath)
+                            if (!file.exists()) {
+                                result.error("FILE_NOT_FOUND", "El archivo no existe", null)
+                                return@setMethodCallHandler
+                            }
+                            val uri = FileProvider.getUriForFile(
+                                this,
+                                "$packageName.fileprovider",
+                                file
+                            )
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = mimeType
+                                putExtra(Intent.EXTRA_STREAM, uri)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                setPackage("com.whatsapp")
+                            }
+                            startActivity(intent)
+                            result.success(true)
+                        } catch (e: Exception) {
+                            try {
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = mimeType
+                                    putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(filePath)))
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                startActivity(Intent.createChooser(intent, "Compartir con WhatsApp"))
+                                result.success(true)
+                            } catch (e2: Exception) {
+                                result.error("WHATSAPP_ERROR", e2.message, null)
+                            }
+                        }
                     }
 
                     else -> result.notImplemented()
@@ -131,7 +168,6 @@ class MainActivity : FlutterActivity() {
         if (requestCode == SAF_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && data?.data != null) {
                 val uri = data.data!!
-                // Persiste el permiso de lectura para uso futuro
                 contentResolver.takePersistableUriPermission(
                     uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION

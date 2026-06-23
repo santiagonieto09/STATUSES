@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+
 enum MediaType { image, video, unknown }
 
 class FileUtils {
@@ -18,6 +21,8 @@ class FileUtils {
     '.3gp',
     '.webm',
   };
+
+  static const int _partialHashSize = 64 * 1024;
 
   static MediaType detectMediaType(String extension) {
     final ext = extension.toLowerCase();
@@ -51,6 +56,23 @@ class FileUtils {
       default:
         return 'application/octet-stream';
     }
+  }
+
+  static Future<String> computeFileHash(String filePath) async {
+    final file = File(filePath);
+    final length = await file.length();
+    if (length > 10 * 1024 * 1024) {
+      return _computePartialHash(file, length);
+    }
+    final bytes = await file.readAsBytes();
+    return sha256.convert(bytes).toString();
+  }
+
+  static Future<String> _computePartialHash(File file, int length) async {
+    final bytes = await file.readAsBytes();
+    final chunk = bytes.take(_partialHashSize).toList();
+    final hash = sha256.convert(chunk).toString();
+    return '$hash|$length';
   }
 
   static String formatFileSize(int bytes) {

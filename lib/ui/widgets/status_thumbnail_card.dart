@@ -31,67 +31,74 @@ class StatusThumbnailCard extends StatelessWidget {
     final isSaved = context.select<DownloadNotifier, bool>(
       (n) => n.savedFilePaths.contains(status.fileName),
     );
+    final opacity = isSaved ? 0.6 : 1.0;
     return RepaintBoundary(
       child: GestureDetector(
         onTap: onTap,
         onLongPress: onLongPress,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppShapes.smallRadius),
-              child: _buildImage(context),
-            ),
-            if (status.mediaType != MediaType.image)
-              Positioned(
-                top: 4,
-                right: 4,
-                child: _buildBadge(context),
-              ),
-            if (isSaved)
-              Positioned(
-                bottom: 4,
-                right: 4,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGreen,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
-                  ),
-                  child: const Icon(Icons.check_rounded,
-                      color: Colors.white, size: 12),
-                ),
-              ),
-            if (isSelected) ...[
+        child: Opacity(
+          opacity: opacity,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppShapes.smallRadius),
-                child: Container(color: Colors.green.withValues(alpha: 0.4)),
+                child: _buildImage(context),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green.shade600, width: 2.5),
-                  borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+              if (status.mediaType != MediaType.image)
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: _buildBadge(context),
                 ),
-              ),
-              Positioned(
-                top: 6,
-                left: 6,
-                child: Container(
-                  width: 22,
-                  height: 22,
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade600,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
+              if (isSaved)
+                Positioned(
+                  bottom: 4,
+                  right: 4,
+                  child: Tooltip(
+                    message: 'Ya guardado',
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: AppColors.accentGreen,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: const Icon(Icons.check_rounded,
+                          color: Colors.white, size: 12),
+                    ),
                   ),
-                  child: const Icon(Icons.check_rounded,
-                      color: Colors.white, size: 14),
                 ),
-              ),
+              if (isSelected) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+                  child: Container(color: Colors.green.withValues(alpha: 0.4)),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green.shade600, width: 2.5),
+                    borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+                  ),
+                ),
+                Positioned(
+                  top: 6,
+                  left: 6,
+                  child: Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade600,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 1.5),
+                    ),
+                    child: const Icon(Icons.check_rounded,
+                        color: Colors.white, size: 14),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

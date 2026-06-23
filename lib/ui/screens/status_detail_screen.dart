@@ -251,6 +251,7 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
 
   Widget _buildBottomBar(BuildContext context) {
     final t = Translations.of(context);
+    final saved = _isSaved(context);
     return Container(
       color: Colors.black87,
       padding: EdgeInsets.only(
@@ -263,12 +264,12 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildActionButton(
-            icon: _isSaved(context)
+            icon: saved
                 ? Icons.check_circle_rounded
                 : Icons.download_rounded,
-            label: _isSaved(context) ? t.detail.saved_badge : t.detail.download,
-            color: _isSaved(context) ? AppColors.accentGreen : Colors.white70,
-            onTap: () => _handleMenuAction('download', context),
+            label: saved ? t.detail.saved_badge : t.detail.download,
+            color: saved ? AppColors.accentGreen : Colors.white54,
+            onTap: saved ? null : () => _handleMenuAction('download', context),
           ),
           _buildActionButton(
             icon: Icons.repeat_rounded,
@@ -293,19 +294,21 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
     Color color = Colors.white70,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 4),
-          Text(label,
-              style: TextStyle(color: color, fontSize: 11)),
-        ],
+      child: Opacity(
+        opacity: onTap == null ? 0.4 : 1.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 4),
+            Text(label, style: TextStyle(color: color, fontSize: 11)),
+          ],
+        ),
       ),
     );
   }
@@ -326,6 +329,25 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
   Future<void> _handleDownload(BuildContext context) async {
     final t = Translations.of(context);
     final notifier = context.read<DownloadNotifier>();
+    if (notifier.savedFilePaths.contains(_current.fileName)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle_rounded,
+                    color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                Expanded(child: Text(t.detail.saved_badge)),
+              ],
+            ),
+            backgroundColor: Colors.green[700],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
+    }
     await notifier.downloadStatus(_current);
     if (context.mounted) {
       final success = notifier.error == null;

@@ -1,5 +1,7 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:statuses/providers/download_notifier.dart';
 import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/ui/screens/saved_statuses_screen.dart';
 import 'package:statuses/ui/screens/status_grid_screen.dart';
@@ -33,6 +35,12 @@ class _AppShellState extends State<AppShell> {
     final t = Translations.of(context);
     final viewMode = context.select<StatusNotifier, ViewMode>(
       (n) => n.viewMode,
+    );
+    final statusCount = context.select<StatusNotifier, int>(
+      (n) => n.statusCount,
+    );
+    final savedCount = context.select<DownloadNotifier, int>(
+      (n) => n.savedCount,
     );
     return Scaffold(
       appBar: AppBar(
@@ -73,17 +81,27 @@ class _AppShellState extends State<AppShell> {
         onDestinationSelected: (index) => setState(() => _currentIndex = index),
         destinations: [
           NavigationDestination(
-            icon: _StatusNavIcon(isActive: false),
-            selectedIcon: _StatusNavIcon(isActive: true),
+            icon: Badge(
+              isLabelVisible: statusCount > 0,
+              label: Text(statusCount > 99 ? '99+' : '$statusCount'),
+              child: const _StatusRingIcon(isActive: false),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: statusCount > 0,
+              label: Text(statusCount > 99 ? '99+' : '$statusCount'),
+              child: const _StatusRingIcon(isActive: true),
+            ),
             label: t.nav.statuses,
           ),
           NavigationDestination(
             icon: Badge(
-              isLabelVisible: false,
+              isLabelVisible: savedCount > 0,
+              label: Text(savedCount > 99 ? '99+' : '$savedCount'),
               child: const Icon(Icons.download_outlined),
             ),
             selectedIcon: Badge(
-              isLabelVisible: false,
+              isLabelVisible: savedCount > 0,
+              label: Text(savedCount > 99 ? '99+' : '$savedCount'),
               child: const Icon(Icons.download_rounded),
             ),
             label: t.nav.saved,
@@ -94,40 +112,71 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-class _StatusNavIcon extends StatelessWidget {
+class _StatusRingIcon extends StatelessWidget {
   final bool isActive;
 
-  const _StatusNavIcon({required this.isActive});
+  const _StatusRingIcon({required this.isActive});
 
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final color = isActive
-        ? AppColors.accentGreen
-        : AppColors.secondaryText;
     return Semantics(
-      label: t.nav.statuses,
+      label: 'Stories',
       child: SizedBox(
         width: 28,
         height: 28,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(
-              isActive ? Icons.circle : Icons.circle_outlined,
-              color: color,
-              size: 28,
-            ),
-            Icon(
-              Icons.add_rounded,
-              color: isActive ? Colors.white : color,
-              size: 16,
-            ),
-          ],
+        child: CustomPaint(
+          painter: _StatusRingPainter(isActive: isActive),
         ),
       ),
     );
   }
+}
+
+class _StatusRingPainter extends CustomPainter {
+  final bool isActive;
+
+  _StatusRingPainter({required this.isActive});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final outerRadius = size.width / 2 - 1;
+    final innerRadius = outerRadius * 0.55;
+    final strokeWidth = outerRadius - innerRadius;
+
+    final color = isActive ? AppColors.accentGreen : AppColors.secondaryText;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final outerGap = 0.25 * math.pi;
+    final innerGap = 0.35 * math.pi;
+    final rotation = isActive ? 0.15 * math.pi : 0.0;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: outerRadius - strokeWidth / 2),
+      rotation + outerGap * 0.5,
+      2 * math.pi - outerGap,
+      false,
+      paint,
+    );
+
+    paint.strokeWidth = strokeWidth * 0.65;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: innerRadius),
+      math.pi + rotation + innerGap * 0.3,
+      2 * math.pi - innerGap,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_StatusRingPainter oldDelegate) =>
+      oldDelegate.isActive != isActive;
 }
 
 class _StatusView extends StatelessWidget {
