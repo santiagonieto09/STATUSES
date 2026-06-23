@@ -7,7 +7,9 @@ import 'package:statuses/providers/locale_notifier.dart';
 import 'package:statuses/providers/theme_notifier.dart';
 import 'package:statuses/ui/screens/app_shell.dart';
 import 'package:statuses/ui/screens/app_startup_screen.dart';
+import 'package:statuses/ui/screens/help_screen.dart';
 import 'package:statuses/ui/screens/permission_screen.dart';
+import 'package:statuses/ui/screens/settings_screen.dart';
 import 'package:statuses/ui/theme/dark_theme.dart';
 import 'package:statuses/ui/theme/light_theme.dart';
 
@@ -37,6 +39,8 @@ class StatusesApp extends StatelessWidget {
               return PermissionScreen(initialState: state);
             },
             '/home': (_) => const AppShell(),
+            '/settings': (_) => const SettingsScreen(),
+            '/help': (_) => const HelpScreen(),
           },
         );
       },

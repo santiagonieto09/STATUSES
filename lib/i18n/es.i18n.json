@@ -66,11 +66,38 @@
     "at": "a las"
   },
   "settings": {
+    "title": "Configuración",
+    "appearance": "Apariencia",
     "language": "Idioma",
     "theme": "Tema",
     "light": "Claro",
     "dark": "Oscuro",
     "toggle_view": "Cambiar vista",
-    "toggle_theme": "Cambiar tema"
+    "toggle_theme": "Cambiar tema",
+    "help": "Ayuda",
+    "help_center": "Centro de ayuda",
+    "about": "Acerca de",
+    "app_name": "Statuses",
+    "app_description": "Visualiza y gestiona archivos multimedia de estados de WhatsApp",
+    "version": "Versión"
+  },
+  "help": {
+    "title": "Centro de ayuda",
+    "how_to_use_title": "Cómo usar",
+    "grant_permissions_title": "Conceder permisos",
+    "grant_permissions_body": "Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca \"Conceder acceso\" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.",
+    "view_statuses_title": "Ver estados",
+    "view_statuses_body": "Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.",
+    "save_statuses_title": "Guardar estados",
+    "save_statuses_body": "Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.",
+    "share_content_title": "Compartir contenido",
+    "share_content_body": "Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.",
+    "switch_view_title": "Cambiar entre vista de cuadrícula y lista",
+    "switch_view_body": "Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.",
+    "dark_mode_title": "Modo oscuro",
+    "dark_mode_body": "Puedes cambiar entre modo claro y oscuro en Configuración. La app también sigue el tema del sistema automáticamente.",
+    "faq_title": "Preguntas frecuentes",
+    "faq_encrypted_names_q": "¿Por qué los archivos tienen nombres extraños?",
+    "faq_encrypted_names_a": "WhatsApp almacena temporalmente los estados utilizando nombres internos generados automáticamente por el sistema. Estos nombres no corresponden al nombre original del archivo y son utilizados por WhatsApp para optimizar el almacenamiento y la gestión del contenido. Esto es completamente normal y no afecta la visualización ni el funcionamiento de los estados."
   }
 }

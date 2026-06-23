@@ -48,6 +48,7 @@ class TranslationsEs extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$empty$es empty = _Translations$empty$es._(_root);
 	@override late final _Translations$date$es date = _Translations$date$es._(_root);
 	@override late final _Translations$settings$es settings = _Translations$settings$es._(_root);
+	@override late final _Translations$help$es help = _Translations$help$es._(_root);
 }
 
 // Path: app
@@ -179,12 +180,46 @@ class _Translations$settings$es extends Translations$settings$en {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
+	@override String get title => 'Configuración';
+	@override String get appearance => 'Apariencia';
 	@override String get language => 'Idioma';
 	@override String get theme => 'Tema';
 	@override String get light => 'Claro';
 	@override String get dark => 'Oscuro';
 	@override String get toggle_view => 'Cambiar vista';
 	@override String get toggle_theme => 'Cambiar tema';
+	@override String get help => 'Ayuda';
+	@override String get help_center => 'Centro de ayuda';
+	@override String get about => 'Acerca de';
+	@override String get app_name => 'Statuses';
+	@override String get app_description => 'Visualiza y gestiona archivos multimedia de estados de WhatsApp';
+	@override String get version => 'Versión';
+}
+
+// Path: help
+class _Translations$help$es extends Translations$help$en {
+	_Translations$help$es._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Centro de ayuda';
+	@override String get how_to_use_title => 'Cómo usar';
+	@override String get grant_permissions_title => 'Conceder permisos';
+	@override String get grant_permissions_body => 'Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca "Conceder acceso" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.';
+	@override String get view_statuses_title => 'Ver estados';
+	@override String get view_statuses_body => 'Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.';
+	@override String get save_statuses_title => 'Guardar estados';
+	@override String get save_statuses_body => 'Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.';
+	@override String get share_content_title => 'Compartir contenido';
+	@override String get share_content_body => 'Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.';
+	@override String get switch_view_title => 'Cambiar entre vista de cuadrícula y lista';
+	@override String get switch_view_body => 'Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.';
+	@override String get dark_mode_title => 'Modo oscuro';
+	@override String get dark_mode_body => 'Puedes cambiar entre modo claro y oscuro en Configuración. La app también sigue el tema del sistema automáticamente.';
+	@override String get faq_title => 'Preguntas frecuentes';
+	@override String get faq_encrypted_names_q => '¿Por qué los archivos tienen nombres extraños?';
+	@override String get faq_encrypted_names_a => 'WhatsApp almacena temporalmente los estados utilizando nombres internos generados automáticamente por el sistema. Estos nombres no corresponden al nombre original del archivo y son utilizados por WhatsApp para optimizar el almacenamiento y la gestión del contenido. Esto es completamente normal y no afecta la visualización ni el funcionamiento de los estados.';
 }
 
 /// The flat map containing all translations for locale <es>.
@@ -245,12 +280,37 @@ extension on TranslationsEs {
 			'date.week_ago' => 'hace 1 semana',
 			'date.weeks_ago' => ({required Object count}) => 'hace ${count} semanas',
 			'date.at' => 'a las',
+			'settings.title' => 'Configuración',
+			'settings.appearance' => 'Apariencia',
 			'settings.language' => 'Idioma',
 			'settings.theme' => 'Tema',
 			'settings.light' => 'Claro',
 			'settings.dark' => 'Oscuro',
 			'settings.toggle_view' => 'Cambiar vista',
 			'settings.toggle_theme' => 'Cambiar tema',
+			'settings.help' => 'Ayuda',
+			'settings.help_center' => 'Centro de ayuda',
+			'settings.about' => 'Acerca de',
+			'settings.app_name' => 'Statuses',
+			'settings.app_description' => 'Visualiza y gestiona archivos multimedia de estados de WhatsApp',
+			'settings.version' => 'Versión',
+			'help.title' => 'Centro de ayuda',
+			'help.how_to_use_title' => 'Cómo usar',
+			'help.grant_permissions_title' => 'Conceder permisos',
+			'help.grant_permissions_body' => 'Al abrir la app por primera vez, se solicitará acceso al almacenamiento. Toca "Conceder acceso" para permitir la lectura de los estados de WhatsApp. Tus archivos permanecen en tu dispositivo.',
+			'help.view_statuses_title' => 'Ver estados',
+			'help.view_statuses_body' => 'Abre WhatsApp y visualiza algunos estados. Luego vuelve a Statuses y aparecerán automáticamente. Usa los filtros para mostrar todo, fotos o videos.',
+			'help.save_statuses_title' => 'Guardar estados',
+			'help.save_statuses_body' => 'Toca un estado para abrirlo en pantalla completa. Usa el botón de descarga o el menú para guardarlo en tu dispositivo.',
+			'help.share_content_title' => 'Compartir contenido',
+			'help.share_content_body' => 'Abre un estado y toca el botón de compartir o usa el menú para compartirlo con otras aplicaciones.',
+			'help.switch_view_title' => 'Cambiar entre vista de cuadrícula y lista',
+			'help.switch_view_body' => 'Toca el icono de cuadrícula/lista en la barra superior para alternar entre una vista compacta en cuadrícula y una vista detallada en lista.',
+			'help.dark_mode_title' => 'Modo oscuro',
+			'help.dark_mode_body' => 'Puedes cambiar entre modo claro y oscuro en Configuración. La app también sigue el tema del sistema automáticamente.',
+			'help.faq_title' => 'Preguntas frecuentes',
+			'help.faq_encrypted_names_q' => '¿Por qué los archivos tienen nombres extraños?',
+			'help.faq_encrypted_names_a' => 'WhatsApp almacena temporalmente los estados utilizando nombres internos generados automáticamente por el sistema. Estos nombres no corresponden al nombre original del archivo y son utilizados por WhatsApp para optimizar el almacenamiento y la gestión del contenido. Esto es completamente normal y no afecta la visualización ni el funcionamiento de los estados.',
 			_ => null,
 		};
 	}
