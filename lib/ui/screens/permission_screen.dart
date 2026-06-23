@@ -132,6 +132,7 @@ class _PermissionScreenState extends State<PermissionScreen>
           const SizedBox(height: 32),
           Text(
             t.permission.title,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
