@@ -106,7 +106,6 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
               ? _buildSelectionBar(context)
               : const SizedBox.shrink(),
         ),
-
         Expanded(
           child: Consumer2<StatusNotifier, DownloadNotifier>(
             builder: (context, statusNotifier, downloadNotifier, _) {
@@ -160,6 +159,16 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
     );
   }
 
+  void _selectAll(List<StatusFile> statuses) {
+    setState(() {
+      _selectedPaths.addAll(statuses.map((s) => s.filePath));
+    });
+  }
+
+  void _deselectAll() {
+    setState(() => _selectedPaths.clear());
+  }
+
   Widget _buildSelectionBar(BuildContext context) {
     final t = Translations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
@@ -167,28 +176,53 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
       key: const ValueKey('selectionBar'),
       color: colorScheme.primaryContainer,
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: const Icon(Icons.close_rounded),
-            color: colorScheme.onPrimaryContainer,
-            tooltip: t.saved.cancel_selection_tooltip,
-            onPressed: _clearSelection,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.close_rounded),
+                color: colorScheme.onPrimaryContainer,
+                tooltip: t.saved.cancel_selection_tooltip,
+                onPressed: _clearSelection,
+              ),
+              Expanded(
+                child: Text(
+                  t.saved.selected_count(count: _selectedPaths.length),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_rounded),
+                color: colorScheme.error,
+                tooltip: t.saved.delete_selected_tooltip,
+                onPressed: () => _confirmDelete(context),
+              ),
+            ],
           ),
-          Expanded(
-            child: Text(
-              t.saved.selected_count(count: _selectedPaths.length),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_rounded),
-            color: colorScheme.error,
-            tooltip: t.saved.delete_selected_tooltip,
-            onPressed: () => _confirmDelete(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                onPressed: () => _deselectAll(),
+                icon: const Icon(Icons.deselect_rounded, size: 18),
+                label: Text(t.saved.deselect_all),
+              ),
+              const SizedBox(width: 16),
+              TextButton.icon(
+                onPressed: () {
+                  final statuses =
+                      context.read<DownloadNotifier>().savedStatuses;
+                  _selectAll(statuses);
+                },
+                icon: const Icon(Icons.select_all_rounded, size: 18),
+                label: Text(t.saved.select_all),
+              ),
+            ],
           ),
         ],
       ),
