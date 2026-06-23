@@ -13,8 +13,6 @@ import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/providers/theme_notifier.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
   };
@@ -32,6 +30,7 @@ void main() async {
 
   runZonedGuarded(
     () {
+      WidgetsFlutterBinding.ensureInitialized();
       runApp(
         TranslationProvider(
           child: MultiProvider(
