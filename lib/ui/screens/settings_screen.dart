@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statuses/i18n/translations.g.dart';
+import 'package:statuses/providers/download_notifier.dart';
+import 'package:statuses/providers/notification_notifier.dart';
 import 'package:statuses/providers/theme_notifier.dart';
 import 'package:statuses/ui/widgets/language_selector.dart';
 
@@ -14,32 +16,38 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(title: Text(t.settings.title)),
       body: _ResponsiveWrapper(
         child: ListView(
-        children: [
-          _SectionHeader(title: t.settings.appearance),
-          const LanguageSelector(),
-          _ThemeTile(),
-          const Divider(),
-          _SectionHeader(title: t.settings.help),
-          ListTile(
-            leading: const Icon(Icons.help_outline_rounded),
-            title: Text(t.settings.help_center),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => Navigator.of(context).pushNamed('/help'),
-          ),
-          const Divider(),
-          _SectionHeader(title: t.settings.about),
-          ListTile(
-            leading: const Icon(Icons.info_outline_rounded),
-            title: Text(t.settings.app_name),
-            subtitle: Text(t.settings.app_description),
-          ),
-          ListTile(
-            leading: const Icon(Icons.tag_rounded),
-            title: Text(t.settings.version),
-            trailing: const Text('1.0.0+1'),
-          ),
-        ],
-      ),
+          children: [
+            _SectionHeader(title: t.settings.appearance),
+            const LanguageSelector(),
+            _ThemeTile(),
+            const Divider(),
+            _SectionHeader(title: t.settings.notifications),
+            _NotificationTile(),
+            const Divider(),
+            _SectionHeader(title: t.settings.auto_save),
+            _AutoSaveTile(),
+            const Divider(),
+            _SectionHeader(title: t.settings.help),
+            ListTile(
+              leading: const Icon(Icons.help_outline_rounded),
+              title: Text(t.settings.help_center),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => Navigator.of(context).pushNamed('/help'),
+            ),
+            const Divider(),
+            _SectionHeader(title: t.settings.about),
+            ListTile(
+              leading: const Icon(Icons.info_outline_rounded),
+              title: Text(t.settings.app_name),
+              subtitle: Text(t.settings.app_description),
+            ),
+            ListTile(
+              leading: const Icon(Icons.tag_rounded),
+              title: Text(t.settings.version),
+              trailing: const Text('1.0.0+1'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -104,6 +112,52 @@ class _ThemeTile extends StatelessWidget {
       ),
       value: themeNotifier.themeMode == ThemeMode.dark,
       onChanged: (_) => themeNotifier.toggleTheme(),
+    );
+  }
+}
+
+class _NotificationTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final notifier = context.watch<NotificationNotifier>();
+    return SwitchListTile(
+      secondary: Icon(
+        notifier.isEnabled
+            ? Icons.notifications_active_rounded
+            : Icons.notifications_off_outlined,
+      ),
+      title: Text(t.settings.notifications),
+      subtitle: Text(
+        notifier.isEnabled
+            ? t.settings.notification_active
+            : t.settings.notification_inactive,
+      ),
+      value: notifier.isEnabled,
+      onChanged: (_) => notifier.toggle(),
+    );
+  }
+}
+
+class _AutoSaveTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final notifier = context.watch<DownloadNotifier>();
+    return SwitchListTile(
+      secondary: Icon(
+        notifier.autoSaveEnabled
+            ? Icons.save_alt_rounded
+            : Icons.save_outlined,
+      ),
+      title: Text(t.settings.auto_save),
+      subtitle: Text(
+        notifier.autoSaveEnabled
+            ? '${t.settings.auto_save_active} · ${notifier.autoSaveStorageInfo}'
+            : t.settings.auto_save_inactive,
+      ),
+      value: notifier.autoSaveEnabled,
+      onChanged: (v) => notifier.toggleAutoSave(v),
     );
   }
 }

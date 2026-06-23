@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:statuses/providers/download_notifier.dart';
 import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/ui/screens/saved_statuses_screen.dart';
 import 'package:statuses/ui/screens/status_grid_screen.dart';
 import 'package:statuses/ui/screens/status_list_screen.dart';
-import 'package:statuses/ui/widgets/bottom_nav_badge.dart';
+import 'package:statuses/ui/theme/app_theme.dart';
 import 'package:statuses/ui/widgets/filter_chips.dart';
 import 'package:statuses/i18n/translations.g.dart';
 
@@ -69,40 +68,59 @@ class _AppShellState extends State<AppShell> {
           SavedStatusesScreen(),
         ],
       ),
-      bottomNavigationBar: RepaintBoundary(
-        child: Consumer2<StatusNotifier, DownloadNotifier>(
-          builder: (context, statusNotifier, downloadNotifier, _) {
-            final t = Translations.of(context);
-            return BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
-              items: [
-                BottomNavigationBarItem(
-                  icon: BottomNavBadge(
-                    count: statusNotifier.statusCount,
-                    child: const Icon(Icons.camera_alt_outlined),
-                  ),
-                  activeIcon: BottomNavBadge(
-                    count: statusNotifier.statusCount,
-                    child: const Icon(Icons.camera_alt_rounded),
-                  ),
-                  label: t.nav.statuses,
-                ),
-                BottomNavigationBarItem(
-                  icon: BottomNavBadge(
-                    count: downloadNotifier.savedCount,
-                    child: const Icon(Icons.download_outlined),
-                  ),
-                  activeIcon: BottomNavBadge(
-                    count: downloadNotifier.savedCount,
-                    child: const Icon(Icons.download_rounded),
-                  ),
-                  label: t.nav.saved,
-                ),
-              ],
-            );
-          },
-        ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        destinations: [
+          NavigationDestination(
+            icon: _StatusNavIcon(isActive: false),
+            selectedIcon: _StatusNavIcon(isActive: true),
+            label: t.nav.statuses,
+          ),
+          NavigationDestination(
+            icon: Badge(
+              isLabelVisible: false,
+              child: const Icon(Icons.download_outlined),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: false,
+              child: const Icon(Icons.download_rounded),
+            ),
+            label: t.nav.saved,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusNavIcon extends StatelessWidget {
+  final bool isActive;
+
+  const _StatusNavIcon({required this.isActive});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isActive
+        ? AppColors.accentGreen
+        : AppColors.secondaryText;
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Icon(
+            isActive ? Icons.circle : Icons.circle_outlined,
+            color: color,
+            size: 28,
+          ),
+          Icon(
+            Icons.add_rounded,
+            color: isActive ? Colors.white : color,
+            size: 16,
+          ),
+        ],
       ),
     );
   }

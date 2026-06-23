@@ -18,6 +18,12 @@ class DarkTheme {
         elevation: 0,
         centerTitle: true,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surfaceDark,
+        indicatorColor: AppColors.accentGreen.withValues(alpha: 0.12),
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        height: 65,
+      ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.surfaceDark,
         selectedItemColor: AppColors.accentGreen,

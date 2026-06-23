@@ -7,6 +7,7 @@ import 'package:statuses/data/repositories/status_repository.dart';
 import 'package:statuses/i18n/translations.g.dart';
 import 'package:statuses/providers/download_notifier.dart';
 import 'package:statuses/providers/locale_notifier.dart';
+import 'package:statuses/providers/notification_notifier.dart';
 import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/providers/theme_notifier.dart';
 
@@ -42,6 +43,10 @@ void main() async {
                 create: (_) => StatusNotifier(StatusRepository()),
               ),
               ChangeNotifierProvider(create: (_) => DownloadNotifier()),
+              ChangeNotifierProxyProvider<StatusNotifier, NotificationNotifier>(
+                create: (ctx) => NotificationNotifier(ctx.read<StatusNotifier>()),
+                update: (ctx, statusNotifier, previous) => previous!,
+              ),
             ],
             child: const StatusesApp(),
           ),
