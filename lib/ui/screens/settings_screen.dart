@@ -12,7 +12,8 @@ class SettingsScreen extends StatelessWidget {
     final t = Translations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(t.settings.title)),
-      body: ListView(
+      body: _ResponsiveWrapper(
+        child: ListView(
         children: [
           _SectionHeader(title: t.settings.appearance),
           _LanguageTile(),
@@ -39,7 +40,28 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
+  }
+}
+
+class _ResponsiveWrapper extends StatelessWidget {
+  final Widget child;
+
+  const _ResponsiveWrapper({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width > 600) {
+      return Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: child,
+        ),
+      );
+    }
+    return child;
   }
 }
 

@@ -31,19 +31,39 @@ class StatusesApp extends StatelessWidget {
           darkTheme: DarkTheme.theme,
           themeMode: themeNotifier.themeMode,
           initialRoute: '/',
-          routes: {
-            '/': (_) => const AppStartupScreen(),
-            '/permission': (context) {
-              final state =
-                  ModalRoute.of(context)?.settings.arguments as PermissionState?;
-              return PermissionScreen(initialState: state);
-            },
-            '/home': (_) => const AppShell(),
-            '/settings': (_) => const SettingsScreen(),
-            '/help': (_) => const HelpScreen(),
+          onGenerateRoute: (settings) {
+            switch (settings.name) {
+              case '/':
+                return _buildRoute(const AppStartupScreen());
+              case '/permission':
+                final state =
+                    settings.arguments as PermissionState?;
+                return _buildRoute(PermissionScreen(initialState: state));
+              case '/home':
+                return _buildRoute(const AppShell());
+              case '/settings':
+                return _buildRoute(const SettingsScreen());
+              case '/help':
+                return _buildRoute(const HelpScreen());
+              default:
+                return null;
+            }
           },
         );
       },
+    );
+  }
+
+  PageRouteBuilder _buildRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 250),
     );
   }
 }
