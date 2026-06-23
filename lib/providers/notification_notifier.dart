@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuses/data/services/notification_service.dart';
+import 'package:statuses/i18n/translations.g.dart';
 import 'package:statuses/providers/status_notifier.dart';
 
 class NotificationNotifier extends ChangeNotifier {
@@ -13,8 +14,10 @@ class NotificationNotifier extends ChangeNotifier {
 
   bool _isEnabled = false;
   int _lastKnownCount = 0;
+  String? _errorMessage;
 
   bool get isEnabled => _isEnabled;
+  String? get errorMessage => _errorMessage;
 
   NotificationNotifier(this._statusNotifier) {
     _loadPreference();
@@ -43,9 +46,11 @@ class NotificationNotifier extends ChangeNotifier {
 
     final granted = await _service.requestPermission();
     if (!granted) {
-      debugPrint('NotificationNotifier: permiso de notificaciones denegado');
+      _errorMessage = 'Permiso de notificaciones denegado';
+      notifyListeners();
       return;
     }
+    _errorMessage = null;
 
     _isEnabled = true;
     _lastKnownCount = _statusNotifier.statusCount;
@@ -78,9 +83,10 @@ class NotificationNotifier extends ChangeNotifier {
     final current = _statusNotifier.statusCount;
     if (current > _lastKnownCount) {
       final newCount = current - _lastKnownCount;
+      final t = LocaleSettings.currentLocale.buildSync();
       final body = newCount == 1
-          ? '1 nuevo estado disponible'
-          : '$newCount nuevos estados disponibles';
+          ? t.detail.new_status_single
+          : t.detail.new_status_plural(count: newCount);
       _service.showGroupedNotification(newCount, body);
     }
     _lastKnownCount = current;

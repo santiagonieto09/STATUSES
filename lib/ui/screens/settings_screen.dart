@@ -129,9 +129,10 @@ class _NotificationTile extends StatelessWidget {
       ),
       title: Text(t.settings.notifications),
       subtitle: Text(
-        notifier.isEnabled
-            ? t.settings.notification_active
-            : t.settings.notification_inactive,
+        notifier.errorMessage ??
+            (notifier.isEnabled
+                ? t.settings.notification_active
+                : t.settings.notification_inactive),
       ),
       value: notifier.isEnabled,
       onChanged: (_) => notifier.toggle(),

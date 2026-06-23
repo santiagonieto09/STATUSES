@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:statuses/data/models/status_file.dart';
-import 'package:statuses/data/services/share_service.dart';
 import 'package:statuses/i18n/translations.g.dart';
+import 'package:statuses/data/services/share_service.dart';
 import 'package:statuses/providers/download_notifier.dart';
 import 'package:statuses/ui/theme/app_theme.dart';
 import 'package:statuses/utils/date_formatter.dart';
@@ -67,17 +67,14 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
       if (adjIdx < 0 || adjIdx >= widget.statuses.length) continue;
       final adjStatus = widget.statuses[adjIdx];
       if (adjStatus.mediaType != MediaType.video) continue;
-      final adjFile = File(adjStatus.filePath);
-      adjFile.exists().then((exists) {
-        if (exists) {
-          File(adjStatus.filePath).readAsBytes().then((_) {});
-        }
-      });
+      File(adjStatus.filePath).lastModified().then((_) {});
     }
   }
 
   bool _isSaved(BuildContext context) {
-    final savedPaths = context.read<DownloadNotifier>().savedFilePaths;
+    final savedPaths = context.select<DownloadNotifier, Set<String>>(
+      (n) => n.savedFilePaths,
+    );
     return savedPaths.contains(_current.fileName);
   }
 
@@ -362,8 +359,41 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
   }
 
   Future<void> _handleRepost(BuildContext context) async {
-    final service = ShareService();
-    await service.repostToWhatsApp(_current);
+    final t = Translations.of(context);
+    try {
+      await context.read<ShareService>().repostToWhatsApp(_current);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                Expanded(child: Text(t.detail.repost_whatsapp)),
+              ],
+            ),
+            backgroundColor: Colors.green[700],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_rounded, color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                Expanded(child: Text('$e')),
+              ],
+            ),
+            backgroundColor: Colors.red[700],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _handleShare(BuildContext context) async {

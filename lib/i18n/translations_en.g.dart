@@ -158,6 +158,12 @@ class Translations$detail$en {
 
 	/// en: 'Saved'
 	String get saved_badge => 'Saved';
+
+	/// en: '1 new status available'
+	String get new_status_single => '1 new status available';
+
+	/// en: '$count new statuses available'
+	String new_status_plural({required Object count}) => '${count} new statuses available';
 }
 
 // Path: saved
@@ -459,6 +465,8 @@ extension on Translations {
 			'detail.repost' => 'Repost',
 			'detail.repost_whatsapp' => 'Post to WhatsApp',
 			'detail.saved_badge' => 'Saved',
+			'detail.new_status_single' => '1 new status available',
+			'detail.new_status_plural' => ({required Object count}) => '${count} new statuses available',
 			'saved.empty_title' => 'No saved stories',
 			'saved.empty_subtitle' => 'Stories you download will appear here.',
 			'saved.empty_filtered_title' => 'No results',

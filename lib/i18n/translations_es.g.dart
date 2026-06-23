@@ -109,6 +109,8 @@ class _Translations$detail$es extends Translations$detail$en {
 	@override String get repost => 'Volver a publicar';
 	@override String get repost_whatsapp => 'Publicar en WhatsApp';
 	@override String get saved_badge => 'Guardado';
+	@override String get new_status_single => '1 nuevo estado disponible';
+	@override String new_status_plural({required Object count}) => '${count} nuevos estados disponibles';
 }
 
 // Path: saved
@@ -268,6 +270,8 @@ extension on TranslationsEs {
 			'detail.repost' => 'Volver a publicar',
 			'detail.repost_whatsapp' => 'Publicar en WhatsApp',
 			'detail.saved_badge' => 'Guardado',
+			'detail.new_status_single' => '1 nuevo estado disponible',
+			'detail.new_status_plural' => ({required Object count}) => '${count} nuevos estados disponibles',
 			'saved.empty_title' => 'Sin historias guardadas',
 			'saved.empty_subtitle' => 'Las historias que descargues aparecerán aquí.',
 			'saved.empty_filtered_title' => 'Sin resultados',

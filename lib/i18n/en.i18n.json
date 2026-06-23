@@ -29,7 +29,9 @@
     "video_badge": "VIDEO",
     "repost": "Repost",
     "repost_whatsapp": "Post to WhatsApp",
-    "saved_badge": "Saved"
+    "saved_badge": "Saved",
+    "new_status_single": "1 new status available",
+    "new_status_plural": "$count new statuses available"
   },
   "saved": {
     "empty_title": "No saved stories",

@@ -64,7 +64,7 @@ class StatusGridScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                onRepost: () => ShareService().repostToWhatsApp(status),
+                onRepost: () => context.read<ShareService>().repostToWhatsApp(status),
               );
             },
           );

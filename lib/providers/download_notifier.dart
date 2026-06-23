@@ -15,6 +15,7 @@ class DownloadNotifier extends ChangeNotifier {
   String? _error;
 
   List<StatusFile> _savedStatuses = [];
+  Set<String> _cachedSavedFilePaths = {};
   bool _isSavedLoading = false;
 
   bool _autoSaveEnabled = false;
@@ -28,7 +29,7 @@ class DownloadNotifier extends ChangeNotifier {
   int get savedCount => _savedStatuses.length;
   bool get isSavedLoading => _isSavedLoading;
   bool get hasSaved => _savedStatuses.isNotEmpty;
-  Set<String> get savedFilePaths => _savedStatuses.map((s) => s.fileName).toSet();
+  Set<String> get savedFilePaths => _cachedSavedFilePaths;
 
   bool get autoSaveEnabled => _autoSaveEnabled;
   String get autoSaveStorageInfo => _autoSaveStorageInfo;
@@ -108,8 +109,10 @@ class DownloadNotifier extends ChangeNotifier {
   Future<void> _loadSaved() async {
     try {
       _savedStatuses = await _service.getSavedStatuses();
+      _cachedSavedFilePaths = _savedStatuses.map((s) => s.fileName).toSet();
     } catch (e) {
       _savedStatuses = [];
+      _cachedSavedFilePaths = {};
     }
   }
 

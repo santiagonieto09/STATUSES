@@ -29,7 +29,9 @@
     "video_badge": "VIDEO",
     "repost": "Volver a publicar",
     "repost_whatsapp": "Publicar en WhatsApp",
-    "saved_badge": "Guardado"
+    "saved_badge": "Guardado",
+    "new_status_single": "1 nuevo estado disponible",
+    "new_status_plural": "$count nuevos estados disponibles"
   },
   "saved": {
     "empty_title": "Sin historias guardadas",

@@ -101,26 +101,30 @@ class _StatusNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     final color = isActive
         ? AppColors.accentGreen
         : AppColors.secondaryText;
-    return SizedBox(
-      width: 28,
-      height: 28,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Icon(
-            isActive ? Icons.circle : Icons.circle_outlined,
-            color: color,
-            size: 28,
-          ),
-          Icon(
-            Icons.add_rounded,
-            color: isActive ? Colors.white : color,
-            size: 16,
-          ),
-        ],
+    return Semantics(
+      label: t.nav.statuses,
+      child: SizedBox(
+        width: 28,
+        height: 28,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(
+              isActive ? Icons.circle : Icons.circle_outlined,
+              color: color,
+              size: 28,
+            ),
+            Icon(
+              Icons.add_rounded,
+              color: isActive ? Colors.white : color,
+              size: 16,
+            ),
+          ],
+        ),
       ),
     );
   }
