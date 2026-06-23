@@ -75,16 +75,23 @@ class SafService {
       final fileSize = (raw['size'] as num?)?.toInt() ?? 0;
       final lastModifiedMs = (raw['lastModified'] as num?)?.toInt() ?? 0;
 
+      final cacheKey = '${fileUri}_$lastModifiedMs';
       final cachedFile = File('${cacheDir.path}/$name');
-      if (!cachedFile.existsSync()) {
-        // Copia en streaming nativo (Kotlin) sin cargar el archivo en RAM
+
+      bool needsCopy = true;
+      if (cachedFile.existsSync()) {
+        final existingLastModified = cachedFile.lastModifiedSync().millisecondsSinceEpoch;
+        needsCopy = (lastModifiedMs - existingLastModified).abs() > 1000;
+      }
+
+      if (needsCopy) {
         try {
           await _channel.invokeMethod('copyFileToCache', {
             'uri': fileUri,
             'destPath': cachedFile.path,
           });
         } on PlatformException {
-          continue; // Si falla la copia, se omite este archivo
+          continue;
         }
       }
 

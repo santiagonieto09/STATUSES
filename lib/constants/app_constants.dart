@@ -20,7 +20,7 @@ class AppConstants {
 
   static const String savedDirName = 'Statuses';
 
-  static const Duration pollInterval = Duration(seconds: 15);
+  static const Duration pollInterval = Duration(seconds: 30);
 
   static const int gridCrossAxisCount = 3;
   static const int gridCrossAxisCountLandscape = 5;

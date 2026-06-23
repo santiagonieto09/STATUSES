@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:statuses/constants/app_constants.dart';
 import 'package:statuses/data/repositories/status_repository.dart';
 
@@ -14,16 +16,43 @@ class FileWatcherService {
 
   void start() {
     _timer = Timer.periodic(AppConstants.pollInterval, (_) async {
-      final statuses = await _repository.loadStatuses();
-      final files = statuses
-          .map((e) => '${e.filePath}|${e.lastModified.millisecondsSinceEpoch}')
-          .toList();
-
-      if (_hasChanged(files)) {
-        _lastSnapshot = files;
-        _controller.add(files);
+      final sw = Stopwatch()..start();
+      final changedFiles = await _quickCheck();
+      debugPrint('FileWatcherService._quickCheck: ${sw.elapsedMilliseconds}ms');
+      if (changedFiles != null) {
+        _lastSnapshot = changedFiles;
+        _controller.add(changedFiles);
       }
     });
+  }
+
+  Future<List<String>?> _quickCheck() async {
+    final currentFiles = <_FileSnapshot>{};
+
+    for (final path in AppConstants.whatsappStatusPaths) {
+      final dir = Directory(path);
+      if (!await dir.exists()) continue;
+
+      final entities = await dir.list().toList();
+      for (final entity in entities) {
+        if (entity is! File) continue;
+        try {
+          currentFiles.add(_FileSnapshot(
+            path: entity.path,
+            lastModified: await entity.lastModified(),
+          ));
+        } catch (_) {}
+      }
+    }
+
+    final sorted = currentFiles.toList()
+      ..sort((a, b) => b.lastModified.compareTo(a.lastModified));
+    final currentList = sorted
+        .map((e) => '${e.path}|${e.lastModified.millisecondsSinceEpoch}')
+        .toList();
+
+    if (_hasChanged(currentList)) return currentList;
+    return null;
   }
 
   void stop() {
@@ -43,4 +72,10 @@ class FileWatcherService {
     stop();
     _controller.close();
   }
+}
+
+class _FileSnapshot {
+  final String path;
+  final DateTime lastModified;
+  const _FileSnapshot({required this.path, required this.lastModified});
 }

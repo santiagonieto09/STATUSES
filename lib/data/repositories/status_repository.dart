@@ -51,43 +51,53 @@ class StatusRepository {
 
   Future<List<StatusFile>> _loadFromDirectories(List<String> dirs) async {
     final sw = Stopwatch()..start();
-    final files = <StatusFile>[];
-    final seenNames = <String>{}; // deduplicación por nombre de archivo
+    final seenNames = <String>{};
+    final allFiles = <_FileEntry>[];
 
     for (final dir in dirs) {
       final dirEntity = Directory(dir);
       if (!await dirEntity.exists()) continue;
 
-      await for (final entity in dirEntity.list()) {
+      final entities = await dirEntity.list().toList();
+      for (final entity in entities) {
         if (entity is! File) continue;
-        final file = entity;
-        final name = file.uri.pathSegments.last;
-        // Si ya procesamos un archivo con este nombre (otra ruta al mismo dir), saltar
+        final name = entity.uri.pathSegments.last;
         if (!seenNames.add(name.toLowerCase())) continue;
 
         final ext =
             name.contains('.') ? '.${name.split('.').last.toLowerCase()}' : '';
-
         final mediaType = FileUtils.detectMediaType(ext);
-        // Solo procesar imagenes y videos
         if (mediaType != MediaType.image && mediaType != MediaType.video) {
           continue;
         }
 
-        files.add(StatusFile(
-          filePath: file.path,
-          fileName: name,
-          extension: ext,
-          fileSize: await file.length(),
-          lastModified: await file.lastModified(),
+        allFiles.add(_FileEntry(
+          file: entity,
+          name: name,
+          ext: ext,
           mediaType: mediaType,
         ));
       }
     }
 
-    files.sort((a, b) => b.lastModified.compareTo(a.lastModified));
-    debugPrint('StatusRepository._loadFromDirectories: ${sw.elapsedMilliseconds}ms for ${files.length} files');
-    return files;
+    final statusFiles = await Future.wait(
+      allFiles.map((e) => _buildStatusFile(e)),
+    );
+
+    statusFiles.sort((a, b) => b.lastModified.compareTo(a.lastModified));
+    debugPrint('StatusRepository._loadFromDirectories: ${sw.elapsedMilliseconds}ms for ${statusFiles.length} files');
+    return statusFiles;
+  }
+
+  Future<StatusFile> _buildStatusFile(_FileEntry entry) async {
+    return StatusFile(
+      filePath: entry.file.path,
+      fileName: entry.name,
+      extension: entry.ext,
+      fileSize: await entry.file.length(),
+      lastModified: await entry.file.lastModified(),
+      mediaType: entry.mediaType,
+    );
   }
 
   /// Retorna true si hay algún directorio accesible (directo o vía SAF).
@@ -116,4 +126,18 @@ class StatusRepository {
     final sourceFile = File(status.filePath);
     await sourceFile.copy(destFile.path);
   }
+}
+
+class _FileEntry {
+  final File file;
+  final String name;
+  final String ext;
+  final MediaType mediaType;
+
+  const _FileEntry({
+    required this.file,
+    required this.name,
+    required this.ext,
+    required this.mediaType,
+  });
 }
