@@ -56,6 +56,22 @@ class _StatusDetailScreenState extends State<StatusDetailScreen> {
     });
     controller.play();
     old?.dispose();
+    _prefetchAdjacentVideos(index);
+  }
+
+  void _prefetchAdjacentVideos(int index) {
+    for (final offset in [-1, 1]) {
+      final adjIdx = index + offset;
+      if (adjIdx < 0 || adjIdx >= widget.statuses.length) continue;
+      final adjStatus = widget.statuses[adjIdx];
+      if (adjStatus.mediaType != MediaType.video) continue;
+      final adjFile = File(adjStatus.filePath);
+      adjFile.exists().then((exists) {
+        if (exists) {
+          File(adjStatus.filePath).readAsBytes().then((_) {});
+        }
+      });
+    }
   }
 
   void _onPageChanged(int index) {
