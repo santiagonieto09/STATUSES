@@ -82,13 +82,13 @@ class DownloadNotifier extends ChangeNotifier {
 
   Future<void> toggleAutoSave(bool enabled) async {
     if (_isSyncing) return;
-    _autoSaveEnabled = enabled;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_autoSavePrefsKey, enabled);
     if (enabled) {
       _isSyncing = true;
+      _autoSaveEnabled = true;
       notifyListeners();
       _processedSourcePaths.clear();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_autoSavePrefsKey, true);
       await _syncOnAutoSaveEnable();
       _startAutoSaveTimer();
       _isSyncing = false;
@@ -96,6 +96,9 @@ class DownloadNotifier extends ChangeNotifier {
       await _updateStorageInfo();
       notifyListeners();
     } else {
+      _autoSaveEnabled = false;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_autoSavePrefsKey, false);
       _stopAutoSaveTimer();
       await _loadSaved();
       await _updateStorageInfo();
