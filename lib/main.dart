@@ -13,6 +13,10 @@ import 'package:statuses/providers/theme_notifier.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+  };
+
   final prefs = await SharedPreferences.getInstance();
   final saved = prefs.getString(LocaleNotifier.key);
   final initialLocale = saved != null

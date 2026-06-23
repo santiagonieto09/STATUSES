@@ -1,18 +1,15 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/utils/file_utils.dart';
 
-/// Servicio de Storage Access Framework (SAF) para acceder a directorios
-/// de otras aplicaciones en Android 11+ cuando el acceso directo por ruta
-/// falla debido a restricciones del sistema.
 class SafService {
   static const _channel = MethodChannel('com.statuses.statuses/saf');
   static const String _safCacheDir = 'saf_statuses_cache';
+  static const int _cacheStaleThresholdMs = 1000;
 
-  /// Busca entre los permisos URI persistidos si ya se concedió acceso
-  /// a la carpeta de estados de WhatsApp o WhatsApp Business.
   Future<Uri?> getGrantedUri() async {
     try {
       final List<dynamic>? perms =
@@ -34,9 +31,6 @@ class SafService {
     return null;
   }
 
-  /// Abre el selector de directorio SAF del sistema.
-  /// El usuario debe navegar hasta la carpeta .Statuses de WhatsApp.
-  /// Retorna el URI seleccionado o null si el usuario canceló.
   Future<Uri?> requestPermission() async {
     try {
       final String? uriString =
@@ -48,9 +42,6 @@ class SafService {
     }
   }
 
-  /// Lista los StatusFile accesibles bajo el [treeUri] SAF concedido.
-  /// Los archivos se copian al directorio de caché de la app mediante
-  /// streaming nativo, evitando cargar archivos grandes en memoria RAM.
   Future<List<StatusFile>> loadStatuses(Uri treeUri) async {
     final List<dynamic>? rawFiles = await _channel.invokeMethod(
       'listFiles',
@@ -65,6 +56,7 @@ class SafService {
       final name = raw['name'] as String? ?? '';
       if (name.isEmpty) continue;
 
+      final safeName = p.basename(name);
       final ext = name.contains('.')
           ? '.${name.split('.').last.toLowerCase()}'
           : '';
@@ -75,12 +67,13 @@ class SafService {
       final fileSize = (raw['size'] as num?)?.toInt() ?? 0;
       final lastModifiedMs = (raw['lastModified'] as num?)?.toInt() ?? 0;
 
-      final cachedFile = File('${cacheDir.path}/$name');
+      final cachedFile = File('${cacheDir.path}/$safeName');
 
       bool needsCopy = true;
-      if (cachedFile.existsSync()) {
-        final existingLastModified = cachedFile.lastModifiedSync().millisecondsSinceEpoch;
-        needsCopy = (lastModifiedMs - existingLastModified).abs() > 1000;
+      if (await cachedFile.exists()) {
+        final existingLastModified =
+            (await cachedFile.lastModified()).millisecondsSinceEpoch;
+        needsCopy = (lastModifiedMs - existingLastModified).abs() > _cacheStaleThresholdMs;
       }
 
       if (needsCopy) {
@@ -94,16 +87,16 @@ class SafService {
         }
       }
 
-      if (!cachedFile.existsSync()) continue;
+      if (!await cachedFile.exists()) continue;
 
       result.add(StatusFile(
         filePath: cachedFile.path,
         fileName: name,
         extension: ext,
-        fileSize: fileSize > 0 ? fileSize : cachedFile.lengthSync(),
+        fileSize: fileSize > 0 ? fileSize : await cachedFile.length(),
         lastModified: lastModifiedMs > 0
             ? DateTime.fromMillisecondsSinceEpoch(lastModifiedMs)
-            : cachedFile.lastModifiedSync(),
+            : await cachedFile.lastModified(),
         mediaType: mediaType,
       ));
     }
@@ -112,7 +105,6 @@ class SafService {
     return result;
   }
 
-  /// Libera el permiso SAF persistido (si se quiere revocar el acceso).
   Future<void> releasePermission(Uri uri) async {
     try {
       await _channel.invokeMethod('releasePermission', {'uri': uri.toString()});
@@ -121,17 +113,16 @@ class SafService {
     }
   }
 
-  /// Elimina los archivos copiados al caché SAF.
   Future<void> clearCache() async {
     final base = await getTemporaryDirectory();
     final dir = Directory('${base.path}/$_safCacheDir');
-    if (dir.existsSync()) await dir.delete(recursive: true);
+    if (await dir.exists()) await dir.delete(recursive: true);
   }
 
   Future<Directory> _ensureCacheDir() async {
     final base = await getTemporaryDirectory();
     final dir = Directory('${base.path}/$_safCacheDir');
-    if (!dir.existsSync()) await dir.create(recursive: true);
+    if (!await dir.exists()) await dir.create(recursive: true);
     return dir;
   }
 }

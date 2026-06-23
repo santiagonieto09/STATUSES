@@ -47,7 +47,7 @@ class StatusNotifier extends ChangeNotifier {
   bool get needsSafFallback => _needsSafFallback;
 
   StatusNotifier(this._repository) {
-    _watcher = FileWatcherService(_repository);
+    _watcher = FileWatcherService();
   }
 
   Future<void> loadStatuses() async {

@@ -10,7 +10,7 @@ class FileWatcherService {
 
   Stream<List<String>> get changes => _controller.stream;
 
-  FileWatcherService(dynamic _);
+  FileWatcherService();
 
   void start() {
     _timer = Timer.periodic(AppConstants.pollInterval, (_) async {
@@ -31,15 +31,16 @@ class FileWatcherService {
       final dir = Directory(path);
       if (!await dir.exists()) continue;
 
-      final entities = await dir.list().toList();
-      for (final entity in entities) {
+      await for (final entity in dir.list()) {
         if (entity is! File) continue;
         try {
           currentFiles.add(_FileSnapshot(
             path: entity.path,
             lastModified: await entity.lastModified(),
           ));
-        } catch (_) {}
+        } catch (e) {
+          debugPrint('FileWatcher: error al leer ${entity.path}: $e');
+        }
       }
     }
 
