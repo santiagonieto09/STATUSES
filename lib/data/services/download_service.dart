@@ -84,6 +84,23 @@ class DownloadService {
     return files;
   }
 
+  Future<String> getStorageUsage() async {
+    try {
+      final dir = await getDownloadDirectory();
+      final directory = Directory(dir);
+      if (!await directory.exists()) return '0 B';
+      int total = 0;
+      await for (final entity in directory.list()) {
+        if (entity is File) {
+          total += await entity.length();
+        }
+      }
+      return FileUtils.formatFileSize(total);
+    } catch (_) {
+      return '0 B';
+    }
+  }
+
   Future<void> shareStatus(StatusFile status) async {
     final file = XFile(status.filePath);
     await SharePlus.instance.share(

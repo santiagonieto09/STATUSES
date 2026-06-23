@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/data/services/download_service.dart';
 
 class DownloadNotifier extends ChangeNotifier {
+  static const String _autoSavePrefsKey = 'auto_save_enabled';
+
   final DownloadService _service = DownloadService();
 
   bool _isDownloading = false;
@@ -14,6 +17,9 @@ class DownloadNotifier extends ChangeNotifier {
   List<StatusFile> _savedStatuses = [];
   bool _isSavedLoading = false;
 
+  bool _autoSaveEnabled = false;
+  String _autoSaveStorageInfo = '';
+
   bool get isDownloading => _isDownloading;
   String? get lastDownloadedPath => _lastDownloadedPath;
   String? get error => _error;
@@ -22,8 +28,58 @@ class DownloadNotifier extends ChangeNotifier {
   int get savedCount => _savedStatuses.length;
   bool get isSavedLoading => _isSavedLoading;
   bool get hasSaved => _savedStatuses.isNotEmpty;
+  Set<String> get savedFilePaths => _savedStatuses.map((s) => s.fileName).toSet();
 
-  /// Descarga (copia) un estado a Pictures/Statuses y recarga la lista guardada.
+  bool get autoSaveEnabled => _autoSaveEnabled;
+  String get autoSaveStorageInfo => _autoSaveStorageInfo;
+
+  DownloadNotifier() {
+    _loadAutoSavePreference();
+  }
+
+  Future<void> _loadAutoSavePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    _autoSaveEnabled = prefs.getBool(_autoSavePrefsKey) ?? false;
+    await _updateStorageInfo();
+    notifyListeners();
+  }
+
+  Future<void> toggleAutoSave(bool enabled) async {
+    _autoSaveEnabled = enabled;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoSavePrefsKey, enabled);
+    if (enabled) {
+      await _loadSaved();
+      await _updateStorageInfo();
+    }
+    notifyListeners();
+  }
+
+  Future<String> _updateStorageInfo() async {
+    _autoSaveStorageInfo = await _service.getStorageUsage();
+    return _autoSaveStorageInfo;
+  }
+
+  Future<bool> isStatusSaved(String filePath) async {
+    final fileName = filePath.split('/').last;
+    try {
+      final dir = await _service.getDownloadDirectory();
+      return await File('$dir/$fileName').exists();
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> autoSaveStatus(StatusFile status) async {
+    if (!_autoSaveEnabled) return;
+    try {
+      await _service.downloadStatus(status);
+      await _updateStorageInfo();
+    } catch (e) {
+      debugPrint('Auto-save falló para ${status.fileName}: $e');
+    }
+  }
+
   Future<void> downloadStatus(StatusFile status) async {
     _isDownloading = true;
     _error = null;
@@ -31,8 +87,8 @@ class DownloadNotifier extends ChangeNotifier {
 
     try {
       _lastDownloadedPath = await _service.downloadStatus(status);
-      // Recargar la lista para que aparezca de inmediato en "Saved"
       await _loadSaved();
+      await _updateStorageInfo();
     } catch (e) {
       _error = 'Download failed: $e';
     }
@@ -41,7 +97,6 @@ class DownloadNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Carga (o recarga) la lista de archivos guardados en Pictures/Statuses.
   Future<void> loadSavedStatuses() async {
     _isSavedLoading = true;
     notifyListeners();
@@ -69,7 +124,6 @@ class DownloadNotifier extends ChangeNotifier {
     }
   }
 
-  /// Devuelve la ruta de la carpeta de descargas para mostrarla en la UI.
   Future<String?> getDownloadDirectoryPath() async {
     try {
       return await _service.getDownloadDirectory();
@@ -78,18 +132,16 @@ class DownloadNotifier extends ChangeNotifier {
     }
   }
 
-  /// Elimina los archivos guardados especificados del dispositivo y recarga la lista.
-  /// Ignora errores individuales para no detener la eliminación del resto.
   Future<void> deleteSavedStatuses(List<String> paths) async {
     for (final path in paths) {
       try {
         final file = File(path);
         if (await file.exists()) await file.delete();
       } catch (_) {
-        // Ignorar errores individuales, continuar con el resto
       }
     }
     await _loadSaved();
+    await _updateStorageInfo();
     notifyListeners();
   }
 
