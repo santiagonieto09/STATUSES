@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:statuses/constants/app_constants.dart';
 import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/data/services/video_thumbnail_service.dart';
 import 'package:statuses/i18n/translations.g.dart';
@@ -23,53 +24,52 @@ class StatusThumbnailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppShapes.smallRadius),
-            child: _buildImage(context),
-          ),
-          if (status.mediaType != MediaType.image)
-            Positioned(
-              top: 4,
-              right: 4,
-              child: _buildBadge(context),
-            ),
-          if (isSelected) ...[
-            // Overlay verde semi-transparente sobre toda la card
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(AppShapes.smallRadius),
-              child: Container(color: Colors.green.withValues(alpha: 0.4)),
+              child: _buildImage(context),
             ),
-            // Borde verde
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green.shade600, width: 2.5),
+            if (status.mediaType != MediaType.image)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: _buildBadge(context),
+              ),
+            if (isSelected) ...[
+              ClipRRect(
                 borderRadius: BorderRadius.circular(AppShapes.smallRadius),
+                child: Container(color: Colors.green.withValues(alpha: 0.4)),
               ),
-            ),
-            // Circulo con check en la esquina superior izquierda
-            Positioned(
-              top: 6,
-              left: 6,
-              child: Container(
-                width: 22,
-                height: 22,
+              Container(
                 decoration: BoxDecoration(
-                  color: Colors.green.shade600,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 1.5),
+                  border: Border.all(color: Colors.green.shade600, width: 2.5),
+                  borderRadius: BorderRadius.circular(AppShapes.smallRadius),
                 ),
-                child: const Icon(Icons.check_rounded,
-                    color: Colors.white, size: 14),
               ),
-            ),
+              Positioned(
+                top: 6,
+                left: 6,
+                child: Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade600,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 1.5),
+                  ),
+                  child: const Icon(Icons.check_rounded,
+                      color: Colors.white, size: 14),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -96,10 +96,14 @@ class StatusThumbnailCard extends StatelessWidget {
               );
             }
             if (snapshot.hasData && snapshot.data != null) {
-              return Image.file(
-                File(snapshot.data!),
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+              return RepaintBoundary(
+                child: Image.file(
+                  File(snapshot.data!),
+                  fit: BoxFit.cover,
+                  cacheWidth: AppConstants.thumbnailSize.toInt(),
+                  cacheHeight: AppConstants.thumbnailSize.toInt(),
+                  errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+                ),
               );
             }
             return _buildPlaceholder(context);
@@ -108,10 +112,14 @@ class StatusThumbnailCard extends StatelessWidget {
       case MediaType.unknown:
         return _buildPlaceholder(context);
       case MediaType.image:
-        return Image.file(
-          File(status.filePath),
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+        return RepaintBoundary(
+          child: Image.file(
+            File(status.filePath),
+            fit: BoxFit.cover,
+            cacheWidth: AppConstants.thumbnailSize.toInt(),
+            cacheHeight: AppConstants.thumbnailSize.toInt(),
+            errorBuilder: (_, __, ___) => _buildPlaceholder(context),
+          ),
         );
     }
   }
@@ -261,10 +269,14 @@ class StatusListItem extends StatelessWidget {
               );
             }
             if (snapshot.hasData && snapshot.data != null) {
-              return Image.file(
-                File(snapshot.data!),
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => errorWidget,
+              return RepaintBoundary(
+                child: Image.file(
+                  File(snapshot.data!),
+                  fit: BoxFit.cover,
+                  cacheWidth: AppConstants.listThumbnailSize.toInt(),
+                  cacheHeight: AppConstants.listThumbnailSize.toInt(),
+                  errorBuilder: (_, __, ___) => errorWidget,
+                ),
               );
             }
             return errorWidget;
@@ -273,10 +285,14 @@ class StatusListItem extends StatelessWidget {
       case MediaType.unknown:
         return errorWidget;
       case MediaType.image:
-        return Image.file(
-          File(status.filePath),
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => errorWidget,
+        return RepaintBoundary(
+          child: Image.file(
+            File(status.filePath),
+            fit: BoxFit.cover,
+            cacheWidth: AppConstants.listThumbnailSize.toInt(),
+            cacheHeight: AppConstants.listThumbnailSize.toInt(),
+            errorBuilder: (_, __, ___) => errorWidget,
+          ),
         );
     }
   }

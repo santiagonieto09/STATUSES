@@ -4,9 +4,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-/// Genera y cachea en disco miniaturas JPEG para archivos de video.
-/// Usa un mapa de Futures en vuelo para evitar generar el mismo thumbnail
-/// dos veces cuando múltiples widgets lo solicitan simultáneamente.
 class VideoThumbnailService {
   static final VideoThumbnailService _instance = VideoThumbnailService._();
   static VideoThumbnailService get instance => _instance;
@@ -17,7 +14,6 @@ class VideoThumbnailService {
 
   final Map<String, Future<String?>> _pending = {};
 
-  /// Devuelve la ruta del thumbnail en caché, generándolo si no existe.
   Future<String?> getThumbnail(String videoPath) {
     return _pending[videoPath] ??= _generate(videoPath);
   }
@@ -33,12 +29,7 @@ class VideoThumbnailService {
 
       if (thumbFile.existsSync()) return thumbFile.path;
 
-      var bytes = await VideoThumbnail.thumbnailData(
-        video: videoPath,
-        imageFormat: ImageFormat.JPEG,
-        maxWidth: 300,
-        quality: 75,
-      );
+      var bytes = await compute(_generateThumbnail, videoPath);
 
       if (bytes == null || bytes.isEmpty) {
         bytes = await _generateWithFallback(videoPath);
@@ -59,10 +50,6 @@ class VideoThumbnailService {
     }
   }
 
-  /// Fallback: copia el video al directorio temporal de la app y
-  /// genera el thumbnail desde allí. Esto evita problemas de
-  /// scoped storage en Android 13+ donde MediaMetadataRetriever
-  /// no puede acceder a archivos de terceros por ruta directa.
   Future<Uint8List?> _generateWithFallback(String videoPath) async {
     try {
       final base = await getTemporaryDirectory();
@@ -92,5 +79,19 @@ class VideoThumbnailService {
       debugPrint('VideoThumbnailService: fallback falló para $videoPath: $e\n$st');
       return null;
     }
+  }
+}
+
+Future<Uint8List?> _generateThumbnail(String videoPath) async {
+  try {
+    return await VideoThumbnail.thumbnailData(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 300,
+      quality: 75,
+    );
+  } catch (e) {
+    debugPrint('VideoThumbnailService isolate: error $e');
+    return null;
   }
 }
