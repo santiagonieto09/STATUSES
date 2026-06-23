@@ -150,12 +150,6 @@ class Translations$detail$en {
 	/// en: 'VIDEO'
 	String get video_badge => 'VIDEO';
 
-	/// en: 'Repost'
-	String get repost => 'Repost';
-
-	/// en: 'Post to WhatsApp'
-	String get repost_whatsapp => 'Post to WhatsApp';
-
 	/// en: 'Saved'
 	String get saved_badge => 'Saved';
 
@@ -389,6 +383,9 @@ class Translations$settings$en {
 
 	/// en: 'Don't show again'
 	String get auto_save_warning_dont_show_again => 'Don\'t show again';
+
+	/// en: 'Syncing statuses...'
+	String get auto_save_syncing => 'Syncing statuses...';
 }
 
 // Path: help
@@ -458,12 +455,6 @@ class Translations$help$en {
 
 	/// en: 'Statuses that have already been saved show a green checkmark icon. In the detail view, the download button changes to "Saved" and is disabled to prevent duplicates.'
 	String get saved_indicator_body => 'Statuses that have already been saved show a green checkmark icon. In the detail view, the download button changes to "Saved" and is disabled to prevent duplicates.';
-
-	/// en: 'Share vs Repost'
-	String get share_vs_repost_title => 'Share vs Repost';
-
-	/// en: 'Use "Share" to send a status to any app. Use "Repost" to send it directly to WhatsApp — the app tries to open WhatsApp's status composer first, then falls back to WhatsApp chat.'
-	String get share_vs_repost_body => 'Use "Share" to send a status to any app. Use "Repost" to send it directly to WhatsApp — the app tries to open WhatsApp\'s status composer first, then falls back to WhatsApp chat.';
 
 	/// en: 'Automatic Synchronization'
 	String get sync_title => 'Automatic Synchronization';
@@ -576,8 +567,6 @@ extension on Translations {
 			'detail.unsupported_file_type' => 'Unsupported file type',
 			'detail.saved_successfully' => 'File saved successfully',
 			'detail.video_badge' => 'VIDEO',
-			'detail.repost' => 'Repost',
-			'detail.repost_whatsapp' => 'Post to WhatsApp',
 			'detail.saved_badge' => 'Saved',
 			'detail.new_status_single' => '1 new status available',
 			'detail.new_status_plural' => ({required Object count}) => '${count} new statuses available',
@@ -641,6 +630,7 @@ extension on Translations {
 			'settings.auto_save_warning_title' => 'Enable auto-save',
 			'settings.auto_save_warning_message' => 'When enabled, all currently visible statuses will be automatically saved to your device. The app will continuously monitor and save new statuses.',
 			'settings.auto_save_warning_dont_show_again' => 'Don\'t show again',
+			'settings.auto_save_syncing' => 'Syncing statuses...',
 			'help.title' => 'Help Center',
 			'help.how_to_use_title' => 'How to use',
 			'help.grant_permissions_title' => 'Grant permissions',
@@ -661,8 +651,6 @@ extension on Translations {
 			'help.auto_save_body' => 'When enabled, the app automatically saves all visible statuses to your device. It works in the background and avoids duplicates. You can see storage usage in Settings.',
 			'help.saved_indicator_title' => 'Saved Status Indicators',
 			'help.saved_indicator_body' => 'Statuses that have already been saved show a green checkmark icon. In the detail view, the download button changes to "Saved" and is disabled to prevent duplicates.',
-			'help.share_vs_repost_title' => 'Share vs Repost',
-			'help.share_vs_repost_body' => 'Use "Share" to send a status to any app. Use "Repost" to send it directly to WhatsApp — the app tries to open WhatsApp\'s status composer first, then falls back to WhatsApp chat.',
 			'help.sync_title' => 'Automatic Synchronization',
 			'help.sync_body' => 'The app automatically detects new statuses in WhatsApp folders. The file watcher checks for changes every 30 seconds. This works even when the app is in the background.',
 			'help.storage_title' => 'Storage Management',

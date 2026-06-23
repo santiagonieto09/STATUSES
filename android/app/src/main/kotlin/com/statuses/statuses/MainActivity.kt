@@ -117,47 +117,6 @@ class MainActivity : FlutterActivity() {
                         result.success(dir.absolutePath)
                     }
 
-                    "shareToWhatsAppStatus" -> {
-                        val filePath = call.argument<String>("filePath")
-                        val mimeType = call.argument<String>("mimeType") ?: "image/*"
-                        if (filePath == null) {
-                            result.error("INVALID_ARGS", "Se requiere 'filePath'", null)
-                            return@setMethodCallHandler
-                        }
-                        try {
-                            val file = File(filePath)
-                            if (!file.exists()) {
-                                result.error("FILE_NOT_FOUND", "El archivo no existe", null)
-                                return@setMethodCallHandler
-                            }
-                            val uri = FileProvider.getUriForFile(
-                                this,
-                                "$packageName.fileprovider",
-                                file
-                            )
-                            val intent = Intent(Intent.ACTION_SEND).apply {
-                                type = mimeType
-                                putExtra(Intent.EXTRA_STREAM, uri)
-                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                setPackage("com.whatsapp")
-                            }
-                            startActivity(intent)
-                            result.success(true)
-                        } catch (e: Exception) {
-                            try {
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = mimeType
-                                    putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(filePath)))
-                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                }
-                                startActivity(Intent.createChooser(intent, "Compartir con WhatsApp"))
-                                result.success(true)
-                            } catch (e2: Exception) {
-                                result.error("WHATSAPP_ERROR", e2.message, null)
-                            }
-                        }
-                    }
-
                     else -> result.notImplemented()
                 }
             }

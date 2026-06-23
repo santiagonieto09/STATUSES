@@ -106,8 +106,6 @@ class _Translations$detail$es extends Translations$detail$en {
 	@override String get unsupported_file_type => 'Tipo de archivo no soportado';
 	@override String get saved_successfully => 'Archivo guardado correctamente';
 	@override String get video_badge => 'VIDEO';
-	@override String get repost => 'Volver a publicar';
-	@override String get repost_whatsapp => 'Publicar en WhatsApp';
 	@override String get saved_badge => 'Guardado';
 	@override String get new_status_single => '1 nuevo estado disponible';
 	@override String new_status_plural({required Object count}) => '${count} nuevos estados disponibles';
@@ -216,6 +214,7 @@ class _Translations$settings$es extends Translations$settings$en {
 	@override String get auto_save_warning_title => 'Activar guardado automático';
 	@override String get auto_save_warning_message => 'Al activar esta opción, todos los estados visibles actualmente se guardarán automáticamente en tu dispositivo. La app monitoreará continuamente y guardará nuevos estados.';
 	@override String get auto_save_warning_dont_show_again => 'No mostrar de nuevo';
+	@override String get auto_save_syncing => 'Sincronizando estados...';
 }
 
 // Path: help
@@ -245,8 +244,6 @@ class _Translations$help$es extends Translations$help$en {
 	@override String get auto_save_body => 'Al activarlo, la app guarda automáticamente todos los estados visibles en tu dispositivo. Funciona en segundo plano y evita duplicados. Puedes ver el uso de almacenamiento en Configuración.';
 	@override String get saved_indicator_title => 'Indicadores de estados guardados';
 	@override String get saved_indicator_body => 'Los estados ya guardados muestran un icono de check verde. En la vista de detalle, el botón de descarga cambia a "Guardado" y se desactiva para evitar duplicados.';
-	@override String get share_vs_repost_title => 'Compartir vs Volver a publicar';
-	@override String get share_vs_repost_body => 'Usa "Compartir" para enviar un estado a cualquier app. Usa "Volver a publicar" para enviarlo directamente a WhatsApp — la app intenta abrir el compositor de estados de WhatsApp primero, luego cae a chat de WhatsApp.';
 	@override String get sync_title => 'Sincronización automática';
 	@override String get sync_body => 'La app detecta automáticamente nuevos estados en las carpetas de WhatsApp. El vigilador de archivos verifica cambios cada 30 segundos. Esto funciona incluso con la app en segundo plano.';
 	@override String get storage_title => 'Gestión de almacenamiento';
@@ -305,8 +302,6 @@ extension on TranslationsEs {
 			'detail.unsupported_file_type' => 'Tipo de archivo no soportado',
 			'detail.saved_successfully' => 'Archivo guardado correctamente',
 			'detail.video_badge' => 'VIDEO',
-			'detail.repost' => 'Volver a publicar',
-			'detail.repost_whatsapp' => 'Publicar en WhatsApp',
 			'detail.saved_badge' => 'Guardado',
 			'detail.new_status_single' => '1 nuevo estado disponible',
 			'detail.new_status_plural' => ({required Object count}) => '${count} nuevos estados disponibles',
@@ -370,6 +365,7 @@ extension on TranslationsEs {
 			'settings.auto_save_warning_title' => 'Activar guardado automático',
 			'settings.auto_save_warning_message' => 'Al activar esta opción, todos los estados visibles actualmente se guardarán automáticamente en tu dispositivo. La app monitoreará continuamente y guardará nuevos estados.',
 			'settings.auto_save_warning_dont_show_again' => 'No mostrar de nuevo',
+			'settings.auto_save_syncing' => 'Sincronizando estados...',
 			'help.title' => 'Centro de ayuda',
 			'help.how_to_use_title' => 'Cómo usar',
 			'help.grant_permissions_title' => 'Conceder permisos',
@@ -390,8 +386,6 @@ extension on TranslationsEs {
 			'help.auto_save_body' => 'Al activarlo, la app guarda automáticamente todos los estados visibles en tu dispositivo. Funciona en segundo plano y evita duplicados. Puedes ver el uso de almacenamiento en Configuración.',
 			'help.saved_indicator_title' => 'Indicadores de estados guardados',
 			'help.saved_indicator_body' => 'Los estados ya guardados muestran un icono de check verde. En la vista de detalle, el botón de descarga cambia a "Guardado" y se desactiva para evitar duplicados.',
-			'help.share_vs_repost_title' => 'Compartir vs Volver a publicar',
-			'help.share_vs_repost_body' => 'Usa "Compartir" para enviar un estado a cualquier app. Usa "Volver a publicar" para enviarlo directamente a WhatsApp — la app intenta abrir el compositor de estados de WhatsApp primero, luego cae a chat de WhatsApp.',
 			'help.sync_title' => 'Sincronización automática',
 			'help.sync_body' => 'La app detecta automáticamente nuevos estados en las carpetas de WhatsApp. El vigilador de archivos verifica cambios cada 30 segundos. Esto funciona incluso con la app en segundo plano.',
 			'help.storage_title' => 'Gestión de almacenamiento',

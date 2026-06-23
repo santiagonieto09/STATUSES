@@ -43,10 +43,6 @@ class FakeDownloadService {
   Future<void> shareStatus(StatusFile status) async {}
 }
 
-class FakeShareService {
-  Future<void> repostToWhatsApp(StatusFile status) async {}
-}
-
 class FakeNotificationService {
   bool initialized = false;
   bool permissionGranted = true;

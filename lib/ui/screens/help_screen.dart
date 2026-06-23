@@ -74,11 +74,6 @@ class HelpScreen extends StatelessWidget {
               body: t.help.saved_indicator_body,
             ),
             _HelpCard(
-              icon: Icons.repeat_rounded,
-              title: t.help.share_vs_repost_title,
-              body: t.help.share_vs_repost_body,
-            ),
-            _HelpCard(
               icon: Icons.sync_rounded,
               title: t.help.sync_title,
               body: t.help.sync_body,
