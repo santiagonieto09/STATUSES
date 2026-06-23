@@ -144,10 +144,6 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
                     : () => downloadNotifier.loadSavedStatuses(),
                 child: CustomScrollView(
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: _buildHeader(
-                          context, downloadNotifier, filtered.length),
-                    ),
                     SliverPadding(
                       padding: const EdgeInsets.all(4),
                       sliver: isGrid
@@ -258,43 +254,6 @@ class _SavedStatusesScreenState extends State<SavedStatusesScreen>
   Widget _buildList(BuildContext context, List<StatusFile> statuses) {
     return SliverList(
       delegate: _itemDelegate(context, statuses, isList: true),
-    );
-  }
-
-  Widget _buildHeader(
-      BuildContext context, DownloadNotifier notifier, int count) {
-    final t = Translations.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Row(
-        children: [
-          Icon(
-            Icons.folder_rounded,
-            size: 16,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            t.saved.header_path(dirName: AppConstants.savedDirName),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-          const SizedBox(width: 6),
-          Icon(
-            Icons.circle,
-            size: 4,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            t.saved.file_count(count: count),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ],
-      ),
     );
   }
 

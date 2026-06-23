@@ -22,6 +22,7 @@ class StatusNotifier extends ChangeNotifier {
   bool _needsSafFallback = false;
 
   List<StatusFile> get statuses => _statuses;
+  int get statusCount => _statuses.length;
   ViewMode get viewMode => _viewMode;
   FilterMode get filterMode => _filterMode;
 

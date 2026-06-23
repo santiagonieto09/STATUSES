@@ -19,6 +19,7 @@ class DownloadNotifier extends ChangeNotifier {
   String? get error => _error;
 
   List<StatusFile> get savedStatuses => _savedStatuses;
+  int get savedCount => _savedStatuses.length;
   bool get isSavedLoading => _isSavedLoading;
   bool get hasSaved => _savedStatuses.isNotEmpty;
 

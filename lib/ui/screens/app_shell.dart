@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:statuses/providers/locale_notifier.dart';
+import 'package:statuses/providers/download_notifier.dart';
 import 'package:statuses/providers/status_notifier.dart';
-import 'package:statuses/providers/theme_notifier.dart';
 import 'package:statuses/ui/screens/saved_statuses_screen.dart';
 import 'package:statuses/ui/screens/status_grid_screen.dart';
 import 'package:statuses/ui/screens/status_list_screen.dart';
+import 'package:statuses/ui/widgets/bottom_nav_badge.dart';
 import 'package:statuses/i18n/translations.g.dart';
 
 class AppShell extends StatefulWidget {
@@ -82,18 +82,11 @@ class _AppShellState extends State<AppShell> {
               tooltip: t.settings.toggle_view,
             ),
           ),
-          Consumer<ThemeNotifier>(
-            builder: (context, notifier, _) => IconButton(
-              icon: Icon(
-                notifier.themeMode == ThemeMode.dark
-                    ? Icons.light_mode_rounded
-                    : Icons.dark_mode_rounded,
-              ),
-              onPressed: () => notifier.toggleTheme(),
-              tooltip: t.settings.toggle_theme,
-            ),
+          IconButton(
+            icon: const Icon(Icons.settings_rounded),
+            tooltip: t.settings.theme,
+            onPressed: () => Navigator.of(context).pushNamed('/settings'),
           ),
-          _LanguageSelector(),
         ],
       ),
       body: IndexedStack(
@@ -103,63 +96,39 @@ class _AppShellState extends State<AppShell> {
           SavedStatusesScreen(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.camera_alt_outlined),
-            activeIcon: const Icon(Icons.camera_alt_rounded),
-            label: t.nav.statuses,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.download_outlined),
-            activeIcon: const Icon(Icons.download_rounded),
-            label: t.nav.saved,
-          ),
-        ],
+      bottomNavigationBar: Consumer2<StatusNotifier, DownloadNotifier>(
+        builder: (context, statusNotifier, downloadNotifier, _) {
+          final t = Translations.of(context);
+          return BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) => setState(() => _currentIndex = index),
+            items: [
+              BottomNavigationBarItem(
+                icon: BottomNavBadge(
+                  count: statusNotifier.statusCount,
+                  child: const Icon(Icons.camera_alt_outlined),
+                ),
+                activeIcon: BottomNavBadge(
+                  count: statusNotifier.statusCount,
+                  child: const Icon(Icons.camera_alt_rounded),
+                ),
+                label: t.nav.statuses,
+              ),
+              BottomNavigationBarItem(
+                icon: BottomNavBadge(
+                  count: downloadNotifier.savedCount,
+                  child: const Icon(Icons.download_outlined),
+                ),
+                activeIcon: BottomNavBadge(
+                  count: downloadNotifier.savedCount,
+                  child: const Icon(Icons.download_rounded),
+                ),
+                label: t.nav.saved,
+              ),
+            ],
+          );
+        },
       ),
-    );
-  }
-}
-
-class _LanguageSelector extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final localeNotifier = context.watch<LocaleNotifier>();
-    final t = Translations.of(context);
-    return PopupMenuButton<AppLocale>(
-      icon: const Icon(Icons.translate_rounded),
-      tooltip: t.settings.language,
-      onSelected: (locale) => localeNotifier.setLocale(locale),
-      itemBuilder: (_) => [
-        PopupMenuItem(
-          value: AppLocale.en,
-          child: Row(
-            children: [
-              if (localeNotifier.locale == AppLocale.en)
-                const Icon(Icons.check, size: 18)
-              else
-                const SizedBox(width: 18),
-              const SizedBox(width: 8),
-              const Text('English'),
-            ],
-          ),
-        ),
-        PopupMenuItem(
-          value: AppLocale.es,
-          child: Row(
-            children: [
-              if (localeNotifier.locale == AppLocale.es)
-                const Icon(Icons.check, size: 18)
-              else
-                const SizedBox(width: 18),
-              const SizedBox(width: 8),
-              const Text('Español'),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
