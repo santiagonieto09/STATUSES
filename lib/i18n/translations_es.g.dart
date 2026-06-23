@@ -137,8 +137,8 @@ class _Translations$permission$es extends Translations$permission$en {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Acceso al almacenamiento requerido';
-	@override String get description => 'Statuses necesita acceso a tu almacenamiento para leer los archivos multimedia de estados de WhatsApp. Tus archivos permanecen en tu dispositivo.';
+	@override String get title => 'Permitir acceso al almacenamiento';
+	@override String get description => 'Statuses necesita acceso al almacenamiento para localizar y mostrar los estados multimedia disponibles en tu dispositivo.';
 	@override String get grant_access => 'Conceder acceso';
 	@override String get permanently_denied => 'El permiso fue denegado permanentemente.\nActívalo en Ajustes.';
 	@override String get open_settings => 'Abrir Ajustes';
@@ -264,8 +264,8 @@ extension on TranslationsEs {
 			'saved.delete_selected_tooltip' => 'Eliminar seleccionados',
 			'saved.file_count' => ({required Object count}) => '${count} archivo(s)',
 			'saved.header_path' => ({required Object dirName}) => 'Pictures/${dirName}',
-			'permission.title' => 'Acceso al almacenamiento requerido',
-			'permission.description' => 'Statuses necesita acceso a tu almacenamiento para leer los archivos multimedia de estados de WhatsApp. Tus archivos permanecen en tu dispositivo.',
+			'permission.title' => 'Permitir acceso al almacenamiento',
+			'permission.description' => 'Statuses necesita acceso al almacenamiento para localizar y mostrar los estados multimedia disponibles en tu dispositivo.',
 			'permission.grant_access' => 'Conceder acceso',
 			'permission.permanently_denied' => 'El permiso fue denegado permanentemente.\nActívalo en Ajustes.',
 			'permission.open_settings' => 'Abrir Ajustes',

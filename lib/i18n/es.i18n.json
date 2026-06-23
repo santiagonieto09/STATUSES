@@ -44,12 +44,12 @@
     "header_path": "Pictures/$dirName"
   },
   "permission": {
-    "title": "Acceso al almacenamiento requerido",
-    "description": "Statuses necesita acceso a tu almacenamiento para leer los archivos multimedia de estados de WhatsApp. Tus archivos permanecen en tu dispositivo.",
+    "title": "Permitir acceso al almacenamiento",
+    "description": "Statuses necesita acceso al almacenamiento para localizar y mostrar los estados multimedia disponibles en tu dispositivo.",
     "grant_access": "Conceder acceso",
-    "permanently_denied": "El permiso fue denegado permanentemente.\nAct\u00edvalo en Ajustes.",
+    "permanently_denied": "El permiso fue denegado permanentemente.\nActívalo en Ajustes.",
     "open_settings": "Abrir Ajustes",
-    "privacy_note": "Tus datos permanecen en tu dispositivo.\nStatuses no recopila ninguna informaci\u00f3n."
+    "privacy_note": "Tus datos permanecen en tu dispositivo.\nStatuses no recopila ninguna información."
   },
   "empty": {
     "default_title": "No se encontraron historias",
