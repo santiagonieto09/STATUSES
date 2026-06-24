@@ -13,7 +13,6 @@ class StatusNotifier extends ChangeNotifier {
   final StatusRepository _repository;
   late final FileWatcherService _watcher;
   StreamSubscription? _subscription;
-  Timer? _filterDebounce;
 
   List<StatusFile> _statuses = [];
   ViewMode _viewMode = ViewMode.grid;
@@ -108,10 +107,7 @@ class StatusNotifier extends ChangeNotifier {
 
   void setFilterMode(FilterMode mode) {
     _filterMode = mode;
-    _filterDebounce?.cancel();
-    _filterDebounce = Timer(const Duration(milliseconds: 50), () {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
   Future<void> refresh() async {
@@ -129,7 +125,6 @@ class StatusNotifier extends ChangeNotifier {
   @override
   void dispose() {
     _subscription?.cancel();
-    _filterDebounce?.cancel();
     _watcher.dispose();
     super.dispose();
   }
