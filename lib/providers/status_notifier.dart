@@ -4,6 +4,7 @@ import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/utils/file_utils.dart';
 import 'package:statuses/data/repositories/status_repository.dart';
 import 'package:statuses/data/services/file_watcher_service.dart';
+import 'package:statuses/data/services/video_thumbnail_service.dart';
 
 enum ViewMode { grid, list }
 
@@ -79,6 +80,7 @@ class StatusNotifier extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+    _precacheThumbnails();
   }
 
   /// Abre el selector de carpeta SAF del sistema.
@@ -116,9 +118,21 @@ class StatusNotifier extends ChangeNotifier {
       _needsSafFallback =
           _statuses.isEmpty && await _repository.needsSafFallback();
       notifyListeners();
+      _precacheThumbnails();
     } catch (e) {
       _errorMessage = 'Refresh failed: $e';
       notifyListeners();
+    }
+  }
+
+  void _precacheThumbnails() {
+    final videos = _statuses
+        .where((s) => s.mediaType == MediaType.video)
+        .take(30)
+        .map((s) => s.filePath)
+        .toList();
+    if (videos.isNotEmpty) {
+      VideoThumbnailService.instance.precache(videos);
     }
   }
 

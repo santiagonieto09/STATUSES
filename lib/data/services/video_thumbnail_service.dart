@@ -18,6 +18,12 @@ class VideoThumbnailService {
     return _pending[videoPath] ??= _generate(videoPath);
   }
 
+  void precache(List<String> videoPaths) {
+    for (final path in videoPaths) {
+      getThumbnail(path);
+    }
+  }
+
   Future<String?> _generate(String videoPath) async {
     try {
       final base = await getTemporaryDirectory();
