@@ -8,6 +8,8 @@ import 'package:statuses/ui/widgets/empty_state.dart';
 import 'package:statuses/ui/widgets/shimmer_loading.dart';
 import 'package:statuses/ui/widgets/status_thumbnail_card.dart';
 
+final _listBuildSw = Stopwatch();
+
 class StatusListScreen extends StatelessWidget {
   final bool needsSafFallback;
   const StatusListScreen({super.key, this.needsSafFallback = false});
@@ -25,6 +27,14 @@ class StatusListScreen extends StatelessWidget {
     final statuses = context.select<StatusNotifier, List<StatusFile>>(
       (n) => n.filteredStatuses,
     );
+    if (!_listBuildSw.isRunning) {
+      _listBuildSw.start();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _listBuildSw.stop();
+        debugPrint('StatusListScreen.build: ${_listBuildSw.elapsedMilliseconds}ms para ${statuses.length} items');
+        _listBuildSw.reset();
+      });
+    }
     if (statuses.isEmpty) {
       return EmptyState(
         title: t.empty.default_title,

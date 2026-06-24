@@ -11,6 +11,8 @@ import 'package:statuses/providers/notification_notifier.dart';
 import 'package:statuses/providers/status_notifier.dart';
 import 'package:statuses/providers/theme_notifier.dart';
 
+final Stopwatch _appStartSw = Stopwatch()..start();
+
 void main() async {
   runZonedGuarded(
     () {
@@ -21,6 +23,8 @@ void main() async {
       };
 
       SharedPreferences.getInstance().then((prefs) {
+        final prefsTime = _appStartSw.elapsedMilliseconds;
+        debugPrint('main: SharedPreferences listas en ${prefsTime}ms');
         final saved = prefs.getString(LocaleNotifier.key);
         final initialLocale = saved != null
             ? AppLocale.values.firstWhere(
@@ -57,6 +61,8 @@ void main() async {
             ),
           ),
         );
+        final runAppTime = _appStartSw.elapsedMilliseconds;
+        debugPrint('main: runApp completado en ${runAppTime}ms');
       });
     },
     (error, stack) {

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:statuses/data/models/status_file.dart';
 import 'package:statuses/utils/file_utils.dart';
 import 'package:statuses/data/repositories/status_repository.dart';

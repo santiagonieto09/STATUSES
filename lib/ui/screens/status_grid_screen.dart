@@ -8,6 +8,8 @@ import 'package:statuses/ui/widgets/empty_state.dart';
 import 'package:statuses/ui/widgets/shimmer_loading.dart';
 import 'package:statuses/ui/widgets/status_thumbnail_card.dart';
 
+final _gridBuildSw = Stopwatch();
+
 class StatusGridScreen extends StatelessWidget {
   final bool needsSafFallback;
   const StatusGridScreen({super.key, this.needsSafFallback = false});
@@ -38,6 +40,14 @@ class StatusGridScreen extends StatelessWidget {
     final statuses = context.select<StatusNotifier, List<StatusFile>>(
       (n) => n.filteredStatuses,
     );
+    if (!_gridBuildSw.isRunning) {
+      _gridBuildSw.start();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _gridBuildSw.stop();
+        debugPrint('StatusGridScreen.build: ${_gridBuildSw.elapsedMilliseconds}ms para ${statuses.length} items');
+        _gridBuildSw.reset();
+      });
+    }
     return RefreshIndicator(
       onRefresh: () => context.read<StatusNotifier>().refresh(),
       child: LayoutBuilder(
