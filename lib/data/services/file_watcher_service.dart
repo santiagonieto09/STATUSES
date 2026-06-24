@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:statuses/constants/app_constants.dart';
 
 class FileWatcherService {
-  Timer? _timer;
+  Timer? _pollTimer;
+  Timer? _nativeDebounce;
+  final List<StreamSubscription> _watchSubs = [];
   List<String> _lastSnapshot = [];
   final _controller = StreamController<List<String>>.broadcast();
 
@@ -13,15 +15,57 @@ class FileWatcherService {
   FileWatcherService();
 
   void start() {
-    _timer = Timer.periodic(AppConstants.pollInterval, (_) async {
-      final sw = Stopwatch()..start();
-      final changedFiles = await _quickCheck();
-      debugPrint('FileWatcherService: ${sw.elapsedMilliseconds}ms, dirs: ${AppConstants.whatsappStatusPaths.length}');
-      if (changedFiles != null) {
-        _lastSnapshot = changedFiles;
-        _controller.add(changedFiles);
+    _tryStartNativeWatcher();
+    _startPollingFallback();
+  }
+
+  void _tryStartNativeWatcher() {
+    for (final path in AppConstants.whatsappStatusPaths) {
+      final dir = Directory(path);
+      if (!dir.existsSync()) continue;
+      try {
+        final sub = dir.watch(
+          events: FileSystemEvent.create |
+              FileSystemEvent.modify |
+              FileSystemEvent.delete,
+        ).listen(
+          (_) => _onNativeEvent(),
+          onError: (Object e) =>
+              debugPrint('FileWatcher: native watcher error en $path: $e'),
+        );
+        _watchSubs.add(sub);
+      } catch (e) {
+        debugPrint('FileWatcher: no se pudo iniciar watcher nativo en $path: $e');
       }
-    });
+    }
+  }
+
+  void _onNativeEvent() {
+    _nativeDebounce?.cancel();
+    _nativeDebounce = Timer(const Duration(seconds: 1), _notifyChange);
+  }
+
+  void _startPollingFallback() {
+    _pollTimer = Timer.periodic(
+      AppConstants.pollInterval,
+      (_) async {
+        final sw = Stopwatch()..start();
+        final changedFiles = await _quickCheck();
+        debugPrint('FileWatcherService (poll): ${sw.elapsedMilliseconds}ms');
+        if (changedFiles != null) {
+          _lastSnapshot = changedFiles;
+          _controller.add(changedFiles);
+        }
+      },
+    );
+  }
+
+  Future<void> _notifyChange() async {
+    final changedFiles = await _quickCheck();
+    if (changedFiles != null) {
+      _lastSnapshot = changedFiles;
+      _controller.add(changedFiles);
+    }
   }
 
   Future<List<String>?> _quickCheck() async {
@@ -55,8 +99,14 @@ class FileWatcherService {
   }
 
   void stop() {
-    _timer?.cancel();
-    _timer = null;
+    _pollTimer?.cancel();
+    _pollTimer = null;
+    for (final sub in _watchSubs) {
+      sub.cancel();
+    }
+    _watchSubs.clear();
+    _nativeDebounce?.cancel();
+    _nativeDebounce = null;
   }
 
   bool _hasChanged(List<String> current) {
