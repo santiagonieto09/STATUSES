@@ -98,10 +98,18 @@ class DownloadService {
     return files;
   }
 
+  static const int _maxHashCacheSize = 500;
+  final List<String> _hashCacheKeys = [];
+
   Future<String> _getOrComputeHash(String filePath) async {
     if (_hashCache.containsKey(filePath)) return _hashCache[filePath]!;
     final hash = await FileUtils.computeFileHash(filePath);
     _hashCache[filePath] = hash;
+    _hashCacheKeys.add(filePath);
+    if (_hashCacheKeys.length > _maxHashCacheSize) {
+      final oldest = _hashCacheKeys.removeAt(0);
+      _hashCache.remove(oldest);
+    }
     return hash;
   }
 

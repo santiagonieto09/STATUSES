@@ -137,10 +137,18 @@ class DownloadNotifier extends ChangeNotifier {
     return _savedHashes.contains(sourceHash);
   }
 
+  static const int _maxHashCacheSize = 500;
+  final List<String> _hashCacheKeys = [];
+
   Future<String> _getOrComputeHash(String filePath) async {
     if (_hashCache.containsKey(filePath)) return _hashCache[filePath]!;
     final hash = await FileUtils.computeFileHash(filePath);
     _hashCache[filePath] = hash;
+    _hashCacheKeys.add(filePath);
+    if (_hashCacheKeys.length > _maxHashCacheSize) {
+      final oldest = _hashCacheKeys.removeAt(0);
+      _hashCache.remove(oldest);
+    }
     return hash;
   }
 
@@ -285,6 +293,7 @@ class DownloadNotifier extends ChangeNotifier {
         if (await file.exists()) await file.delete();
       } catch (_) {}
       _hashCache.remove(path);
+      _hashCacheKeys.remove(path);
     }
     await _loadSaved();
     await _updateStorageInfo();
