@@ -11,6 +11,10 @@ class StatusRepository {
   StatusRepository({SafService? safService})
       : _safService = safService ?? SafService();
 
+  List<StatusFile>? _metadataCache;
+  DateTime? _cacheTime;
+  static const _cacheTtl = Duration(seconds: 2);
+
   /// Descubre las rutas directas accesibles en el sistema de archivos.
   Future<List<String>> _discoverDirectories() async {
     final dirs = <String>[];
@@ -29,11 +33,19 @@ class StatusRepository {
   Future<List<StatusFile>> loadStatuses() async {
     final sw = Stopwatch()..start();
 
+    if (_metadataCache != null && _cacheTime != null) {
+      if (DateTime.now().difference(_cacheTime!) < _cacheTtl) {
+        return _metadataCache!;
+      }
+    }
+
     final dirs = await _discoverDirectories();
 
     if (dirs.isNotEmpty) {
       final result = await _loadFromDirectories(dirs);
       debugPrint('StatusRepository.loadStatuses: ${sw.elapsedMilliseconds}ms (direct, ${result.length} files)');
+      _metadataCache = result;
+      _cacheTime = DateTime.now();
       return result;
     }
 
@@ -42,6 +54,8 @@ class StatusRepository {
     if (safUri != null) {
       final result = await _safService.loadStatuses(safUri);
       debugPrint('StatusRepository.loadStatuses: ${sw.elapsedMilliseconds}ms (SAF, ${result.length} files)');
+      _metadataCache = result;
+      _cacheTime = DateTime.now();
       return result;
     }
 
