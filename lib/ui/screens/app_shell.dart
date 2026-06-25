@@ -124,7 +124,7 @@ class _AppShellState extends State<AppShell> {
           ),
           IconButton(
             icon: const Icon(Icons.settings_rounded),
-            tooltip: t.settings.theme,
+            tooltip: t.settings.title,
             onPressed: () => Navigator.of(context).pushNamed('/settings'),
           ),
         ],
