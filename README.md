@@ -91,22 +91,22 @@ lib/
 
 <div align="center">
 
-| Capa           | Tecnología                                                                                                                                                                      |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework      | `<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" width="24" alt="Flutter">` Flutter **3.27+**                    |
-| Lenguaje       | `<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/dart/dart-original.svg" width="24" alt="Dart">` Dart **3.6+**                                 |
-| Estado         | `<img src="https://avatars.githubusercontent.com/u/1952277?s=200&v=4" width="24" alt="Provider">` Provider                                                                     |
-| Almacenamiento | `<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original.svg" width="24" alt="Android">` `shared_preferences` + `path_provider` |
-| Permisos       | `permission_handler`                                                                                                                                                           |
-| Video          | `<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vlc/vlc-original.svg" width="24" alt="Video Player">` `video_player` + `video_thumbnail`        |
-| Caché         | `flutter_cache_manager`                                                                                                                                                        |
-| Compartir      | `share_plus`                                                                                                                                                                   |
-| i18n           | `slang` + `slang_flutter`                                                                                                                                                    |
-| Notificaciones | `flutter_local_notifications`                                                                                                                                                  |
-| Utilidades     | `intl`, `path`, `crypto`, `device_info_plus`, `url_launcher`                                                                                                           |
-| Testing        | `flutter_test`, `mockito`                                                                                                                                                    |
-| Linting        | `flutter_lints`                                                                                                                                                                |
-| Build          | `build_runner` + `slang_build_runner`                                                                                                                                        |
+| Capa | Tecnología |
+|------|-------------|
+| Framework | <img src="https://cdn.jsdelivr.net/npm/devicons@1.8.0/icons/flutter/flutter-original.svg" width="24" alt="Flutter"> Flutter **3.27+** |
+| Lenguaje | <img src="https://cdn.jsdelivr.net/npm/devicons@1.8.0/icons/dart/dart-original.svg" width="24" alt="Dart"> Dart **3.6+** |
+| Estado | Provider |
+| Almacenamiento | <img src="https://cdn.jsdelivr.net/npm/devicons@1.8.0/icons/android/android-original.svg" width="24" alt="Android"> `shared_preferences` + `path_provider` |
+| Permisos | `permission_handler` |
+| Video | `video_player` + `video_thumbnail` |
+| Caché | `flutter_cache_manager` |
+| Compartir | `share_plus` |
+| i18n | `slang` + `slang_flutter` |
+| Notificaciones | `flutter_local_notifications` |
+| Utilidades | `intl`, `path`, `crypto`, `device_info_plus`, `url_launcher` |
+| Testing | `flutter_test`, `mockito` |
+| Linting | `flutter_lints` |
+| Build | `build_runner` + `slang_build_runner` |
 
 </div>
 
