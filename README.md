@@ -264,3 +264,7 @@ La generación de código se ejecuta automáticamente mediante `slang_build_runn
 | Target SDK    | Definido por`flutter.targetSdkVersion`        |
 | Arquitecturas | ARM64-v8a, armeabi-v7a (multi-APK configurable) |
 | Orientaciones | Vertical y horizontal                           |
+
+## Aviso legal
+
+**Statuses** es una aplicación independiente. No está afiliada a, respaldada por ni conectada de ningún modo con WhatsApp o Meta Platforms, Inc. La aplicación únicamente lee archivos que WhatsApp ya almacena en el dispositivo y no modifica ni interfiere con el funcionamiento de WhatsApp en ningún momento. Todos los datos permanecen en el dispositivo; la app no recopila, transmite ni comparte información personal o de usuario con servicios externos.
