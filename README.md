@@ -93,20 +93,20 @@ lib/
 
 | Capa | Tecnología |
 |------|-------------|
-| Framework | ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white) Flutter **3.27+** |
-| Lenguaje | ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat&logo=dart&logoColor=white) Dart **3.6+** |
-| Estado | ![Provider](https://img.shields.io/badge/Provider-4FC08D?style=flat&logo=flutter&logoColor=white) Provider |
-| Almacenamiento | ![Android](https://img.shields.io/badge/Android-3DDC84?style=flat&logo=android&logoColor=white) `shared_preferences` + `path_provider` |
-| Permisos | `permission_handler` |
-| Video | `video_player` + `video_thumbnail` |
-| Caché | `flutter_cache_manager` |
-| Compartir | `share_plus` |
-| i18n | `slang` + `slang_flutter` |
-| Notificaciones | `flutter_local_notifications` |
-| Utilidades | `intl`, `path`, `crypto`, `device_info_plus`, `url_launcher` |
-| Testing | `flutter_test`, `mockito` |
-| Linting | `flutter_lints` |
-| Build | `build_runner` + `slang_build_runner` |
+| Framework | ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white) |
+| Lenguaje | ![Dart](https://img.shields.io/badge/Dart-3.6.2-0175C2?style=flat&logo=dart&logoColor=white) |
+| Estado | ![Provider](https://img.shields.io/badge/provider-6.1.2-4FC08D?style=flat&logo=flutter&logoColor=white) |
+| Almacenamiento | ![path_provider](https://img.shields.io/badge/path__provider-2.1.4-02569B?style=flat&logo=flutter&logoColor=white) ![shared_preferences](https://img.shields.io/badge/shared__preferences-2.5.5-02569B?style=flat&logo=flutter&logoColor=white) |
+| Permisos | ![permission_handler](https://img.shields.io/badge/permission__handler-12.0.3-02569B?style=flat&logo=flutter&logoColor=white) |
+| Video | ![video_player](https://img.shields.io/badge/video__player-2.9.2-02569B?style=flat&logo=flutter&logoColor=white) ![video_thumbnail](https://img.shields.io/badge/video__thumbnail-0.5.3-02569B?style=flat&logo=flutter&logoColor=white) |
+| Caché | ![flutter_cache_manager](https://img.shields.io/badge/flutter__cache__manager-3.4.1-02569B?style=flat&logo=flutter&logoColor=white) |
+| Compartir | ![share_plus](https://img.shields.io/badge/share__plus-13.1.0-02569B?style=flat&logo=flutter&logoColor=white) |
+| i18n | ![slang](https://img.shields.io/badge/slang-4.5.0-02569B?style=flat&logo=flutter&logoColor=white) ![slang_flutter](https://img.shields.io/badge/slang__flutter-4.5.0-02569B?style=flat&logo=flutter&logoColor=white) |
+| Notificaciones | ![flutter_local_notifications](https://img.shields.io/badge/flutter__local__notifications-18.0.1-02569B?style=flat&logo=flutter&logoColor=white) |
+| Utilidades | ![intl](https://img.shields.io/badge/intl-0.20.2-02569B?style=flat) ![path](https://img.shields.io/badge/path-1.9.0-02569B?style=flat) ![crypto](https://img.shields.io/badge/crypto-3.0.3-02569B?style=flat) ![device_info_plus](https://img.shields.io/badge/device__info__plus-13.1.0-02569B?style=flat) ![url_launcher](https://img.shields.io/badge/url__launcher-6.3.2-02569B?style=flat) |
+| Testing | ![flutter_test](https://img.shields.io/badge/flutter__test-SDK-02569B?style=flat) ![mockito](https://img.shields.io/badge/mockito-5.4.4-02569B?style=flat) |
+| Linting | ![flutter_lints](https://img.shields.io/badge/flutter__lints-6.0.0-02569B?style=flat) |
+| Build | ![build_runner](https://img.shields.io/badge/build__runner-2.4.0-02569B?style=flat) ![slang_build_runner](https://img.shields.io/badge/slang__build__runner-4.5.0-02569B?style=flat) |
 
 </div>
 
