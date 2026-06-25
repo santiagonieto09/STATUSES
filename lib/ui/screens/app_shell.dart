@@ -93,9 +93,6 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final buildSw = Stopwatch()..start();
     final t = Translations.of(context);
-    final viewMode = context.select<StatusNotifier, ViewMode>(
-      (n) => n.viewMode,
-    );
     final statusCount = context.select<StatusNotifier, int>(
       (n) => n.statusCount,
     );
@@ -120,15 +117,6 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              viewMode == ViewMode.grid
-                  ? Icons.view_list_rounded
-                  : Icons.grid_view_rounded,
-            ),
-            onPressed: () => context.read<StatusNotifier>().toggleViewMode(),
-            tooltip: t.settings.toggle_view,
-          ),
           IconButton(
             icon: const Icon(Icons.settings_rounded),
             tooltip: t.settings.title,
